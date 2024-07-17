@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "declusor"
+version = "2024.7.0"
+description = "declusor is a versatile payload delivery handler designed to manage the delivery of Bash script payloads to Linux machines."
+dependencies = []
+requires-python = ">=3.10"
+readme = "README.md"
+license = {file = "LICENSE.txt"}
+keywords = ["bash", "security", "post", "exploitation", "payload", "delivery", "infosec"]
+classifiers = ["Development Status :: 4 - Beta", "Programming Language :: Python :: 3.10"]
+
+[project.urls]
+Homepage = "https://github.com/othonhugo/declusor/"
+Repository = "https://github.com/othonhugo/declusor.git"
+Issues = "https://github.com/othonhugo/declusor/issues"
+
+[project.optional-dependencies]
+lint = ["flake8"]
+dev = ["mypy"]
+
+[tool.black]
+line-length = 79
+
+[tool.isort]
+profile = "black"

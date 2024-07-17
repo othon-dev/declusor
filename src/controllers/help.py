@@ -1,0 +1,11 @@
+from interfaces import IRouter, ISession
+from services import write_message
+
+
+def help_controller(session: ISession, router: IRouter, line: str) -> None:
+    """Display usage information for available commands."""
+
+    if line:
+        write_message(router.get_controller_documentation(line))
+    else:
+        write_message(router.documentation)
