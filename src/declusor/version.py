@@ -1,4 +1,4 @@
-major, minor, patch = 2025, 9, 1
+major, minor, patch = 2025, 9, 2
 
 __version__ = f"{major}.{minor}.{patch}"
 
