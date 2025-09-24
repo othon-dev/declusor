@@ -1,4 +1,4 @@
-from config import LocalException
+from config import DeclusorException
 from interfaces import IPrompt, IRouter, ISession
 from services import read_message, write_error_message
 
@@ -33,5 +33,5 @@ class PromptCLI(IPrompt):
         while True:
             try:
                 self.handle_route(self.read_command())
-            except LocalException as err:
+            except DeclusorException as err:
                 write_error_message(str(err))
