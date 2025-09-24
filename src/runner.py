@@ -3,7 +3,7 @@ from os.path import exists, isdir
 
 import config
 from infra import PromptCLI, Session, Router
-from route import set_routes
+from router import set_routes
 from util import await_connection, format_client_bash_code
 
 
