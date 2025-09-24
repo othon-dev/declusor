@@ -2,8 +2,8 @@ from os import chdir
 from os.path import exists, isdir
 
 import config
-from infra import PromptCLI, Session, Router
-from router import set_routes
+import controller
+from core import PromptCLI, Router, Session
 from util import await_connection, format_client_bash_code
 
 
@@ -29,6 +29,16 @@ def run_service(host: str, port: int, client: str) -> None:
 
         prompt = PromptCLI(router, session)
         prompt.run()
+
+
+def set_routes(router: Router) -> None:
+    router.connect("load", controller.call_load)
+    router.connect("command", controller.call_command)
+    router.connect("shell", controller.call_shell)
+    router.connect("upload", controller.call_upload)
+    router.connect("execute", controller.call_execute)
+    router.connect("help", controller.call_help)
+    router.connect("exit", controller.call_exit)
 
 
 def handle_exception(err: Exception | KeyboardInterrupt) -> None:

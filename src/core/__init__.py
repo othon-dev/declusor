@@ -1,3 +1,3 @@
 from .prompt import PromptCLI
-from .session import Session
 from .router import Router
+from .session import Session
