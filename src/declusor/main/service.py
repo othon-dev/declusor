@@ -4,8 +4,8 @@ from os.path import exists, isdir
 import config
 import controller
 from core import PromptCLI, Router, Session
-from util import await_connection, format_client_bash_code
 from interface import IRouter
+from util import await_connection, format_client_bash_code
 
 
 def set_routes(router: IRouter) -> None:

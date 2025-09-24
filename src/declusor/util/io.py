@@ -1,5 +1,4 @@
 import sys
-
 from os import scandir
 from os.path import exists, isfile, join, splitext
 
