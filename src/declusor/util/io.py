@@ -87,7 +87,7 @@ def write_error_message(message: str) -> None:
     sys.stderr.flush()
 
 
-def write_warninig_message(message: str) -> None:
+def write_warning_message(message: str) -> None:
     """Write a warning message to standard error."""
 
     sys.stderr.write(f"warning: {message}\n".lower())

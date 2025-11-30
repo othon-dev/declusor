@@ -11,7 +11,7 @@ from .io import (
     write_binary_message,
     write_error_message,
     write_message,
-    write_warninig_message,
+    write_warning_message,
 )
 from .parse import parse_command_arguments
 from .socket import await_connection
