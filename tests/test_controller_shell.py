@@ -1,14 +1,16 @@
 import unittest
-from unittest.mock import patch, MagicMock
-import sys
-import os
 from threading import Event
+from unittest.mock import MagicMock, patch
 
-from declusor.controller.shell import call_shell, handle_input_data, handle_socket_data
+from declusor.controller.shell import (
+    call_shell,
+    handle_input_data,
+    handle_socket_data,
+)
 
 
 class TestShellController(unittest.TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.mock_session = MagicMock()
         self.mock_router = MagicMock()
 
@@ -16,7 +18,9 @@ class TestShellController(unittest.TestCase):
     @patch("declusor.controller.shell.handle_socket_data")
     @patch("declusor.controller.shell.Thread")
     @patch("declusor.controller.shell.parse_command_arguments")
-    def test_call_shell_orchestration(self, mock_parse, mock_thread_cls, mock_handle_socket, mock_handle_input):
+    def test_call_shell_orchestration(
+        self, mock_parse: MagicMock, mock_thread_cls: MagicMock, mock_handle_socket: MagicMock, mock_handle_input: MagicMock
+    ) -> None:
         # Setup
         mock_thread_instance = MagicMock()
         mock_thread_cls.return_value = mock_thread_instance
@@ -32,7 +36,7 @@ class TestShellController(unittest.TestCase):
         mock_thread_instance.join.assert_called()
 
     @patch("declusor.controller.shell.read_message")
-    def test_handle_input_data(self, mock_read):
+    def test_handle_input_data(self, mock_read: MagicMock) -> None:
         # Setup: read returns a command, then raises StopIteration (or we break loop manually)
         # Since handle_input_data is while True, we need to throw an exception to break it
         mock_read.side_effect = ["cmd1", KeyboardInterrupt]
@@ -45,7 +49,7 @@ class TestShellController(unittest.TestCase):
         self.mock_session.write.assert_called_with(b"cmd1")
 
     @patch("declusor.controller.shell.write_binary_message")
-    def test_handle_socket_data(self, mock_write):
+    def test_handle_socket_data(self, mock_write: MagicMock) -> None:
         # Setup
         flag = Event()
         self.mock_session.read.return_value = [b"data1", b"data2"]

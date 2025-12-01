@@ -1,14 +1,12 @@
+import socket
 import unittest
 from unittest.mock import MagicMock, patch
-import socket
-import sys
-import os
 
 from declusor.core.session import Session
 
 
 class TestSession(unittest.TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.mock_socket = MagicMock(spec=socket.socket)
         self.server_ack = b"<ACK>"
         self.client_ack = b"<CLT>"
@@ -17,12 +15,12 @@ class TestSession(unittest.TestCase):
         with patch("declusor.core.session.load_library", return_value=b"init_data"):
             self.session = Session(self.mock_socket, self.server_ack, self.client_ack)
 
-    def test_init_sends_library(self):
+    def test_init_sends_library(self) -> None:
         """Test that initialization sends the library data."""
         # This is handled in setUp, but we verify the calls
         self.mock_socket.sendall.assert_called()
 
-    def test_write_sends_content_and_ack(self):
+    def test_write_sends_content_and_ack(self) -> None:
         """Test that write sends content followed by client ACK."""
         content = b"hello"
         self.session.write(content)
@@ -30,7 +28,7 @@ class TestSession(unittest.TestCase):
         expected_payload = content + self.client_ack
         self.mock_socket.sendall.assert_called_with(expected_payload)
 
-    def test_read_yields_data_until_ack(self):
+    def test_read_yields_data_until_ack(self) -> None:
         """Test reading data that arrives in chunks, ending with ACK."""
         # Setup mock to return chunks
         # Chunk 1: "Hello "
@@ -42,7 +40,7 @@ class TestSession(unittest.TestCase):
 
         self.assertEqual(full_data, b"Hello World")
 
-    def test_read_handles_split_ack(self):
+    def test_read_handles_split_ack(self) -> None:
         """Test reading when the ACK is split across chunks."""
         # ACK is <ACK> (5 bytes)
         # Chunk 1: "Data" + "<AC"
@@ -54,7 +52,7 @@ class TestSession(unittest.TestCase):
 
         self.assertEqual(full_data, b"Data")
 
-    def test_read_connection_closed(self):
+    def test_read_connection_closed(self) -> None:
         """Test that ConnectionResetError is raised if peer closes connection."""
         self.mock_socket.recv.return_value = b""
 

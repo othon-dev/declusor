@@ -1,23 +1,22 @@
 import unittest
-from unittest.mock import patch, MagicMock
-import sys
-import os
+from unittest.mock import MagicMock, patch
+
 
 from declusor.controller.upload import call_upload
-from declusor.config import InvalidArgument
 
 
 class TestUploadController(unittest.TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.mock_session = MagicMock()
         self.mock_router = MagicMock()
 
-    @patch("declusor.controller.upload.write_error_message")
     @patch("declusor.controller.upload.write_binary_message")
     @patch("declusor.controller.upload.format_bash_function_call")
-    @patch("declusor.controller.upload.load_file")
+    @patch("declusor.controller.upload.safe_load_file")
     @patch("declusor.controller.upload.parse_command_arguments")
-    def test_upload_success(self, mock_parse, mock_load, mock_format, mock_write_bin, mock_error):
+    def test_upload_success(
+        self, mock_parse: MagicMock, mock_load: MagicMock, mock_format: MagicMock, mock_write_bin: MagicMock
+    ) -> None:
         # Setup
         mock_parse.return_value = ({"filepath": "local_file.txt"}, [])
         mock_load.return_value = b"file_content"
@@ -33,21 +32,19 @@ class TestUploadController(unittest.TestCase):
         mock_format.assert_called_with("store_base64_encoded_value", "ZmlsZV9jb250ZW50")
         self.mock_session.write.assert_called_with(b"bash_command")
         mock_write_bin.assert_called_with(b"response")
-        mock_error.assert_not_called()
 
-    @patch("declusor.controller.upload.write_error_message")
-    @patch("declusor.controller.upload.load_file")
+    @patch("declusor.controller.upload.safe_load_file")
     @patch("declusor.controller.upload.parse_command_arguments")
-    def test_upload_invalid_argument(self, mock_parse, mock_load, mock_error):
+    def test_upload_invalid_argument(self, mock_parse: MagicMock, mock_load: MagicMock) -> None:
         # Setup
         mock_parse.return_value = ({"filepath": "missing.txt"}, [])
-        mock_load.side_effect = InvalidArgument("file not found")
+        mock_load.return_value = None
 
         # Execute
         call_upload(self.mock_session, self.mock_router, "missing.txt")
 
         # Verify
-        mock_error.assert_called_with("invalid argument: file not found")
+        mock_load.assert_called_with("missing.txt")
         self.mock_session.write.assert_not_called()
 
 

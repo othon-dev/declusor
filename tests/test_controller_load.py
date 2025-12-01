@@ -1,14 +1,12 @@
 import unittest
-from unittest.mock import patch, MagicMock
-import sys
-import os
+from unittest.mock import MagicMock, patch
 
-from declusor.controller.load import call_load
 from declusor.config import InvalidArgument
+from declusor.controller.load import call_load
 
 
 class TestLoadController(unittest.TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.mock_session = MagicMock()
         self.mock_router = MagicMock()
 
@@ -16,7 +14,7 @@ class TestLoadController(unittest.TestCase):
     @patch("declusor.controller.load.write_binary_message")
     @patch("declusor.controller.load.load_payload")
     @patch("declusor.controller.load.parse_command_arguments")
-    def test_load_success(self, mock_parse, mock_load, mock_write_bin, mock_error):
+    def test_load_success(self, mock_parse: MagicMock, mock_load: MagicMock, mock_write_bin: MagicMock, mock_error: MagicMock) -> None:
         # Setup
         mock_parse.return_value = ({"payload": "test_payload.sh"}, [])
         mock_load.return_value = b"payload_content"
@@ -35,7 +33,7 @@ class TestLoadController(unittest.TestCase):
     @patch("declusor.controller.load.write_error_message")
     @patch("declusor.controller.load.load_payload")
     @patch("declusor.controller.load.parse_command_arguments")
-    def test_load_invalid_argument(self, mock_parse, mock_load, mock_error):
+    def test_load_invalid_argument(self, mock_parse: MagicMock, mock_load: MagicMock, mock_error: MagicMock) -> None:
         # Setup
         mock_parse.return_value = ({"payload": "bad.sh"}, [])
         mock_load.side_effect = InvalidArgument("file not found")
