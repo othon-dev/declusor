@@ -2,7 +2,7 @@ import sys
 from os import scandir
 from os.path import exists, isfile, join, splitext
 
-from config import LIBRARY_DIR, SCRIPTS_DIR, InvalidArgument
+from declusor.config import LIBRARY_DIR, SCRIPTS_DIR, InvalidArgument
 
 
 def load_payload(module: str) -> bytes:

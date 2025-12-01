@@ -1,8 +1,8 @@
 import socket
 from typing import Generator
 
-from interface import ISession
-from util import load_library, write_warning_message
+from declusor.interface import ISession
+from declusor.util import load_library, write_warning_message
 
 
 class Session(ISession):
@@ -52,8 +52,8 @@ class Session(ISession):
             finally:
                 self.set_timeout(self._timeout)
         except Exception:
-             # Log or handle initialization errors if necessary
-             pass
+            # Log or handle initialization errors if necessary
+            pass
 
     def set_blocking(self, flag: bool) -> None:
         """Set the blocking mode of the socket."""
@@ -77,7 +77,7 @@ class Session(ISession):
                 chunk = self.connection.recv(self.DEFAULT_BUFSIZE)
                 if not chunk:
                     raise ConnectionResetError("Connection closed by peer")
-                
+
                 buffer.extend(chunk)
 
                 # Check if ACK is present in the buffer
@@ -89,20 +89,20 @@ class Session(ISession):
                     # ACK found. Yield data up to ACK and stop.
                     yield bytes(buffer[:ack_index])
                     break
-                
+
                 # If buffer is larger than ACK length, we can safely yield the beginning
                 if len(buffer) > ack_len:
                     safe_len = len(buffer) - ack_len
                     yield bytes(buffer[:safe_len])
                     del buffer[:safe_len]
-                
+
             except socket.timeout:
                 continue
 
     def write(self, content: bytes) -> None:
         """
         Write data to the connection followed by the client ACK.
-        
+
         Args:
             content: The bytes to send.
         """

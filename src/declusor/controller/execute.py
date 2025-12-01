@@ -1,8 +1,8 @@
 from base64 import b64encode
 
-from config import InvalidArgument
-from interface import IRouter, ISession
-from util import (
+from declusor.config import InvalidArgument
+from declusor.interface import IRouter, ISession
+from declusor.util import (
     format_bash_function_call,
     load_file,
     parse_command_arguments,
@@ -14,9 +14,7 @@ from util import (
 def call_execute(session: ISession, router: IRouter, line: str) -> None:
     """Execute a file on the remote system."""
 
-    arguments, unknown_arguments = parse_command_arguments(
-        line, {"filepath": str}, allow_unknown=True
-    )
+    arguments, unknown_arguments = parse_command_arguments(line, {"filepath": str}, allow_unknown=True)
 
     try:
         file_content = load_file(arguments["filepath"])

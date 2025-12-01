@@ -1,7 +1,7 @@
-from config import DeclusorException
-from interface import IPrompt, IRouter, ISession
-from util import read_message, write_error_message
-from version import PROJECT_NAME
+from declusor.config import DeclusorException
+from declusor.interface import IPrompt, IRouter, ISession
+from declusor.util import read_message, write_error_message
+from declusor.version import PROJECT_NAME
 
 
 class PromptCLI(IPrompt):
@@ -26,9 +26,7 @@ class PromptCLI(IPrompt):
 
         match command.split(" ", 1):
             case [route, argument]:
-                self.router.locate(route)(
-                    self.session, self.router, argument.strip()
-                )
+                self.router.locate(route)(self.session, self.router, argument.strip())
             case [route]:
                 self.router.locate(route)(self.session, self.router, "")
             case _:

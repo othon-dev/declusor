@@ -1,8 +1,8 @@
 from base64 import b64encode
 
-from config import InvalidArgument
-from interface import IRouter, ISession
-from util import (
+from declusor.config import InvalidArgument
+from declusor.interface import IRouter, ISession
+from declusor.util import (
     format_bash_function_call,
     load_file,
     parse_command_arguments,
@@ -22,9 +22,7 @@ def call_upload(session: ISession, router: IRouter, line: str) -> None:
         write_error_message(str(err))
         return
 
-    function_call = format_bash_function_call(
-        "store_base64_encoded_value", b64encode(file_content).decode()
-    )
+    function_call = format_bash_function_call("store_base64_encoded_value", b64encode(file_content).decode())
 
     session.write(function_call.encode())
 

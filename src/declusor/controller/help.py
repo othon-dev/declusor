@@ -1,5 +1,5 @@
-from interface import IRouter, ISession
-from util import write_message
+from declusor.interface import IRouter, ISession
+from declusor.util import write_message
 
 
 def call_help(session: ISession, router: IRouter, line: str) -> None:

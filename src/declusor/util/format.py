@@ -1,7 +1,7 @@
 from os.path import join
 from string import Template
 
-from config import CLIENTS_DIR, DEFAULT_SRV_ACK
+from declusor.config import CLIENTS_DIR, DEFAULT_SRV_ACK
 
 
 def convert_bytes_to_hex(data: bytes) -> str:

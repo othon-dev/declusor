@@ -1,6 +1,6 @@
-from config import InvalidArgument
-from interface import IRouter, ISession
-from util import (
+from declusor.config import InvalidArgument
+from declusor.interface import IRouter, ISession
+from declusor.util import (
     load_payload,
     parse_command_arguments,
     write_binary_message,

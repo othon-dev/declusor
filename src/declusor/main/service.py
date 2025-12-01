@@ -1,11 +1,11 @@
 from os import chdir
 from os.path import exists, isdir
 
-import config
-import controller
-from core import PromptCLI, Router, Session
-from interface import IRouter
-from util import await_connection, format_client_bash_code
+from declusor import config
+from declusor import controller
+from declusor.core import PromptCLI, Router, Session
+from declusor.interface import IRouter
+from declusor.util import await_connection, format_client_bash_code
 
 
 def set_routes(router: IRouter) -> None:

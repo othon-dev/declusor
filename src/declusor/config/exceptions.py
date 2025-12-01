@@ -1,12 +1,9 @@
 class DeclusorException(Exception):
     """Base exception for declusor-related errors."""
-    pass
 
 
 class ArgumentParsingError(DeclusorException):
     """Error parsing command-line arguments."""
-
-    pass
 
 
 class InvalidRoute(DeclusorException):

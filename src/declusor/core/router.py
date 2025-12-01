@@ -1,5 +1,5 @@
-from config import InvalidRoute
-from interface import Controller, IRouter
+from declusor.config import InvalidRoute
+from declusor.interface import Controller, IRouter
 
 
 class Router(IRouter):

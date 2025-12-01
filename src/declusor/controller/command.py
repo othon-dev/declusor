@@ -1,5 +1,5 @@
-from interface import IRouter, ISession
-from util import parse_command_arguments, write_binary_message
+from declusor.interface import IRouter, ISession
+from declusor.util import parse_command_arguments, write_binary_message
 
 
 def call_command(session: ISession, router: IRouter, line: str) -> None:

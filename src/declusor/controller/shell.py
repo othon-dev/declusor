@@ -1,7 +1,7 @@
 from threading import Event, Thread
 
-from interface import IRouter, ISession
-from util import parse_command_arguments, read_message, write_binary_message
+from declusor.interface import IRouter, ISession
+from declusor.util import parse_command_arguments, read_message, write_binary_message
 
 
 def call_shell(session: ISession, router: IRouter, line: str) -> None:
