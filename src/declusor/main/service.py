@@ -1,8 +1,7 @@
 from os import chdir
 from os.path import exists, isdir
 
-from declusor import config
-from declusor import controller
+from declusor import config, controller
 from declusor.core import PromptCLI, Router, Session
 from declusor.interface import IRouter
 from declusor.util import await_connection, format_client_bash_code

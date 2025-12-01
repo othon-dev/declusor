@@ -1,7 +1,11 @@
 from threading import Event, Thread
 
 from declusor.interface import IRouter, ISession
-from declusor.util import parse_command_arguments, read_message, write_binary_message
+from declusor.util import (
+    parse_command_arguments,
+    read_message,
+    write_binary_message,
+)
 
 
 def call_shell(session: ISession, router: IRouter, line: str) -> None:
@@ -24,12 +28,16 @@ def call_shell(session: ISession, router: IRouter, line: str) -> None:
 
 
 def handle_input_data(session: ISession) -> None:
+    """Handle input data from the user."""
+
     while True:
         if command := read_message().strip():
             session.write(command.encode())
 
 
 def handle_socket_data(session: ISession, flag: Event) -> None:
+    """Handle socket data from the target device."""
+
     while not flag.is_set():
         for data in session.read():
             if data:

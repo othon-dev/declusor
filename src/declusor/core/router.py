@@ -3,8 +3,10 @@ from declusor.interface import Controller, IRouter
 
 
 class Router(IRouter):
+    """Router implementation."""
+
     def __init__(self) -> None:
-        self.route_table: dict[str, Controller] = dict()
+        self.route_table: dict[str, Controller] = {}
 
     @property
     def routes(self) -> tuple[str, ...]:
@@ -50,7 +52,7 @@ class Router(IRouter):
 
         documentation = str()
 
-        for route in self.route_table.keys():
+        for route in self.route_table:
             documentation += f"{route:<{key_length}}: "
             documentation += f"{self.get_controller_documentation(route)}\n"
 

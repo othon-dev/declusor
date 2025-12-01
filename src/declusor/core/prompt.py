@@ -5,6 +5,8 @@ from declusor.version import PROJECT_NAME
 
 
 class PromptCLI(IPrompt):
+    """CLI prompt implementation."""
+
     prompt = f"[{PROJECT_NAME}] "
 
     def __init__(self, router: IRouter, session: ISession) -> None:

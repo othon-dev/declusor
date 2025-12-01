@@ -10,6 +10,7 @@ from .io import (
     read_message,
     write_binary_message,
     write_error_message,
+    safe_load_file,
     write_message,
     write_warning_message,
 )

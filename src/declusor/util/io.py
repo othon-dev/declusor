@@ -19,7 +19,7 @@ def load_payload(module: str) -> bytes:
     if not isfile(module_filepath):
         raise InvalidArgument(f"expecting a file: {module}")
 
-    # # uncomment to restrict third-party payloads
+    ## uncomment to restrict third-party payloads
     #
     # from os.path import commonpath
     # if commonpath([PAYLOAD_DIR, module_filepath]) != PAYLOAD_DIR:
@@ -52,12 +52,22 @@ def load_file(filepath: str) -> bytes:
     if not exists(filepath):
         raise InvalidArgument(f"file not found: {filepath}")
 
-    elif not isfile(filepath):
+    if not isfile(filepath):
         raise InvalidArgument(f"expecting a file: {filepath}")
 
-    else:
-        with open(filepath, "rb") as f:
-            return f.read()
+    with open(filepath, "rb") as f:
+        return f.read()
+
+
+def safe_load_file(filepath: str) -> bytes | None:
+    """Load a file safely, writing an error message if it fails."""
+
+    try:
+        return load_file(filepath)
+    except InvalidArgument as err:
+        write_error_message(str(err))
+
+        return None
 
 
 def read_message(prompt: str = "") -> str:

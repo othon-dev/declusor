@@ -15,12 +15,12 @@ def format_client_bash_code(filepath: str, **kwargs: str | int) -> str:
 
     client_code = str()
 
-    with open(join(CLIENTS_DIR, filepath), "r") as f:
+    with open(join(CLIENTS_DIR, filepath), "r", encoding="utf-8") as f:
         for line in f.readlines():
             if not line.lstrip().startswith("#"):
                 client_code += line
 
-    kwargs.update(dict(acknowledge=convert_bytes_to_hex(DEFAULT_SRV_ACK)))
+    kwargs.update({"acknowledge": convert_bytes_to_hex(DEFAULT_SRV_ACK)})
 
     client_code = " ".join(client_code.split())
     client_code = Template(client_code).safe_substitute(**format_bash_arguments(**kwargs))
