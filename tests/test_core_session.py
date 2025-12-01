@@ -4,20 +4,17 @@ import socket
 import sys
 import os
 
-# Add src to path so we can import declusor
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../src/declusor')))
-
 from declusor.core.session import Session
+
 
 class TestSession(unittest.TestCase):
     def setUp(self):
         self.mock_socket = MagicMock(spec=socket.socket)
         self.server_ack = b"<ACK>"
         self.client_ack = b"<CLT>"
-        
+
         # Mock load_library to prevent file I/O during init
-        with patch('declusor.core.session.load_library', return_value=b"init_data"):
+        with patch("declusor.core.session.load_library", return_value=b"init_data"):
             self.session = Session(self.mock_socket, self.server_ack, self.client_ack)
 
     def test_init_sends_library(self):
@@ -29,7 +26,7 @@ class TestSession(unittest.TestCase):
         """Test that write sends content followed by client ACK."""
         content = b"hello"
         self.session.write(content)
-        
+
         expected_payload = content + self.client_ack
         self.mock_socket.sendall.assert_called_with(expected_payload)
 
@@ -38,15 +35,11 @@ class TestSession(unittest.TestCase):
         # Setup mock to return chunks
         # Chunk 1: "Hello "
         # Chunk 2: "World" + ACK
-        self.mock_socket.recv.side_effect = [
-            b"Hello ",
-            b"World" + self.server_ack,
-            b"" # EOF
-        ]
-        
+        self.mock_socket.recv.side_effect = [b"Hello ", b"World" + self.server_ack, b""]  # EOF
+
         received_chunks = list(self.session.read())
         full_data = b"".join(received_chunks)
-        
+
         self.assertEqual(full_data, b"Hello World")
 
     def test_read_handles_split_ack(self):
@@ -54,23 +47,20 @@ class TestSession(unittest.TestCase):
         # ACK is <ACK> (5 bytes)
         # Chunk 1: "Data" + "<AC"
         # Chunk 2: "K>"
-        self.mock_socket.recv.side_effect = [
-            b"Data<AC",
-            b"K>",
-            b""
-        ]
-        
+        self.mock_socket.recv.side_effect = [b"Data<AC", b"K>", b""]
+
         received_chunks = list(self.session.read())
         full_data = b"".join(received_chunks)
-        
+
         self.assertEqual(full_data, b"Data")
 
     def test_read_connection_closed(self):
         """Test that ConnectionResetError is raised if peer closes connection."""
         self.mock_socket.recv.return_value = b""
-        
+
         with self.assertRaises(ConnectionResetError):
             next(self.session.read())
+
 
 if __name__ == "__main__":
     unittest.main()
