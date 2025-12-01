@@ -1,7 +1,6 @@
 import unittest
 from unittest.mock import MagicMock, patch
 
-
 from declusor.controller.upload import call_upload
 
 
@@ -14,9 +13,7 @@ class TestUploadController(unittest.TestCase):
     @patch("declusor.controller.upload.format_bash_function_call")
     @patch("declusor.controller.upload.safe_load_file")
     @patch("declusor.controller.upload.parse_command_arguments")
-    def test_upload_success(
-        self, mock_parse: MagicMock, mock_load: MagicMock, mock_format: MagicMock, mock_write_bin: MagicMock
-    ) -> None:
+    def test_upload_success(self, mock_parse: MagicMock, mock_load: MagicMock, mock_format: MagicMock, mock_write_bin: MagicMock) -> None:
         # Setup
         mock_parse.return_value = ({"filepath": "local_file.txt"}, [])
         mock_load.return_value = b"file_content"

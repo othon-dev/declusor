@@ -49,6 +49,8 @@ def set_line_completer(*command_routes: str) -> None:
             case _:
                 return None
 
+        return None
+
     readline.set_completer_delims(" /\t\n;")
     readline.set_completer(complete_line)
     readline.parse_and_bind("tab: complete")

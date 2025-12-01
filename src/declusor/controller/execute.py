@@ -1,12 +1,11 @@
 from base64 import b64encode
 
-
 from declusor.interface import IRouter, ISession
 from declusor.util import (
     format_bash_function_call,
     parse_command_arguments,
-    write_binary_message,
     safe_load_file,
+    write_binary_message,
 )
 
 

@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
-from typing import Callable
+from typing import TYPE_CHECKING, Callable
 
-
+if TYPE_CHECKING:
+    from declusor.interface.session import ISession
 
 Controller = Callable[["ISession", "IRouter", str], None]
 

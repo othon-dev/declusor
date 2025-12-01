@@ -1,7 +1,6 @@
 import unittest
 from unittest.mock import MagicMock, patch
 
-
 from declusor.controller.execute import call_execute
 
 
