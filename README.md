@@ -82,6 +82,7 @@ When the reverse shell is active, Declusor shows a `[declusor]` prompt. Availabl
 
 ```
 [declusor] help
+
 load    : Load a payload from a file and send it to the remote system.
 command : Execute a command on the remote system.
 shell   : Open an interactive shell session with the target device.
@@ -89,21 +90,23 @@ upload  : Uploads a file to the target machine.
 execute : Execute a file on the remote system.
 help    : Display help information about available commands.
 exit    : Exit the program.
-```
 
-## Example Output
+[declusor] load info/tools.sh
 
-```bash
-[declusor] help
-load    : Load a payload from a file and send it to the remote system.
-command : Execute a command on the remote system.
-shell   : Open an interactive shell session with the target device.
-upload  : Uploads a file to the target machine.
-execute : Execute a file on the remote system.
-help    : Display help information about available commands.
-exit    : Exit the program.
+USEFUL TOOLS
+------------
+/usr/bin/gcc
+/usr/bin/wget
+/usr/bin/curl
 [declusor] 
 ```
+
+## Customizing and Extending Payloads
+
+To fully leverage `declusor`, you can create custom payloads or modify the existing ones. Start by exploring the `data` directory, which contains two key subdirectories: `lib` and `scripts`.
+
+- **`data/lib/`**: This folder contains scripts that are automatically sent to the target immediately after a connection is established. These scripts are intended to persist in the target's memory, effectively allowing the target to "remember" the subroutines. Once stored, these subroutines can be used repeatedly in combination with your payloads.
+- **`data/scripts/`**: This folder holds scripts that the target executes on demand. The output from these scripts is sent back to your server (or your prompt). The `load` command automatically scans this folder for available files and directories, simplifying the process of incorporating them into your payloads.
 
 ## Contributing
 
