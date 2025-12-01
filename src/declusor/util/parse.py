@@ -28,7 +28,10 @@ def parse_command_arguments(line: str, definitions: dict[str, type], allow_unkno
 
         parser.add_argument(arg_name, type=arg_type)
 
-    parser_args_list = shlex.split(line)
+    try:
+        parser_args_list = shlex.split(line)
+    except ValueError as e:
+        raise ArgumentParsingError(f"Parsing error: {e}")
 
     if allow_unknown:
         parsed_namespace, unknown_arguments = parser.parse_known_args(parser_args_list)

@@ -1,44 +1,37 @@
-[project]
+[tool.poetry]
 name = "declusor"
-version = "2025.9.2"
+version = "2025.11.0"
 description = "declusor is a versatile payload delivery handler designed to manage the delivery of Bash script payloads to Linux machines."
-dependencies = []
-requires-python = ">=3.10"
+authors = ["Othon Hugo <othonhugo@users.noreply.github.com>"]
 readme = "README.md"
-license = {file = "LICENSE"}
-keywords = ["bash", "security", "post", "exploitation", "payload", "delivery", "infosec"]
+license = "LICENSE"
+keywords = ["bash", "security", "post-exploitation", "payload-delivery", "infosec"]
 classifiers = ["Development Status :: 4 - Beta", "Programming Language :: Python :: 3.10"]
+packages = [{ include = "declusor", from = "src" }]
 
-[project.urls]
+[tool.poetry.urls]
 Homepage = "https://github.com/othonhugo/declusor/"
 Repository = "https://github.com/othonhugo/declusor.git"
 Issues = "https://github.com/othonhugo/declusor/issues"
 
-[project.optional-dependencies]
-lint = ["flake8"]
-dev = ["mypy"]
+[tool.poetry.dependencies]
+python = "^3.10"
 
-[dependency-groups]
-dev = [
-    "pylint (>=3.3.8,<4.0.0)",
-    "mypy (>=1.18.2,<2.0.0)",
-    "black (>=25.9.0,<26.0.0)",
-    "isort (>=6.1.0,<7.0.0)",
-    "pytest (>=8.4.2)",
-]
+[tool.poetry.group.dev.dependencies]
+pylint = "^3.3.8"
+mypy = "^1.18.2"
+black = "^25.9.0"
+isort = "^6.1.0"
+pytest = "^8.4.2"
+hypothesis = "^6.0.0"
+flake8 = "*"
 
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
+requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.setuptools]
-package-dir = { "" = "src" }
-
-[tool.poetry]
-packages = [{ include = "declusor", from = "src" }]
-
 [tool.pylint.main]
-source-roots = "src/"
+source-roots = ["src"]
 max-line-length = 150
 recursive = true
 disable = [
