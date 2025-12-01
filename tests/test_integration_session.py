@@ -1,13 +1,13 @@
+import asyncio
 import socket
 import threading
-import time
 import unittest
 from unittest.mock import patch
 
 from declusor.core.session import Session
 
 
-class TestSessionIntegration(unittest.TestCase):
+class TestSessionIntegration(unittest.IsolatedAsyncioTestCase):
     def setUp(self) -> None:
         # Create a real TCP server
         self.server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -22,14 +22,8 @@ class TestSessionIntegration(unittest.TestCase):
         self.server_thread = threading.Thread(target=self._run_server)
         self.server_thread.start()
 
-        # Connect client socket
-        self.client_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.client_sock.connect(("127.0.0.1", self.port))
-
     def tearDown(self) -> None:
         self.running = False
-        if self.client_sock:
-            self.client_sock.close()
 
         # Connect to server to unblock accept if needed
         try:
@@ -45,6 +39,7 @@ class TestSessionIntegration(unittest.TestCase):
     def _run_server(self) -> None:
         try:
             self.server_sock.settimeout(1)
+
             while self.running:
                 try:
                     conn, addr = self.server_sock.accept()
@@ -64,6 +59,7 @@ class TestSessionIntegration(unittest.TestCase):
                     while self.running:
                         try:
                             data = conn.recv(4096)
+
                             if not data:
                                 break
 
@@ -76,17 +72,30 @@ class TestSessionIntegration(unittest.TestCase):
         except OSError:
             pass
 
-    def test_session_handshake_and_echo(self) -> None:
+    async def test_session_handshake_and_echo(self) -> None:
+        """Test session initialization and bidirectional communication with echo protocol."""
+
         # Patch load_library to avoid filesystem dependency and return known data
         with patch("declusor.core.session.load_library", return_value=b"init_lib"):
-            session = Session(self.client_sock, self.server_ack, self.client_ack)
+            reader, writer = await asyncio.open_connection("127.0.0.1", self.port)
+            session = Session(reader, writer, self.server_ack, self.client_ack)
+
+            await session.initialize()
 
             # Test write
-            session.write(b"ping")
+            await session.write(b"ping")
 
             # Test read
             # We expect "pong"
-            responses = list(session.read())
+            responses: list[bytes] = []
+
+            async for chunk in session.read():
+                responses.append(chunk)
+
             full_response = b"".join(responses)
 
             self.assertEqual(full_response, b"pong")
+
+            writer.close()
+
+            await writer.wait_closed()

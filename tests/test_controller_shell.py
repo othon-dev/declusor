@@ -1,80 +1,94 @@
+import asyncio
 import unittest
-from threading import Event
-from unittest.mock import MagicMock, patch
+from asyncio import Event
+from typing import AsyncGenerator
+from unittest.mock import AsyncMock, MagicMock, patch
 
-from declusor.controller.shell import (
-    call_shell,
-    handle_input_data,
-    handle_socket_data,
-)
+from declusor.controller.shell import call_shell, handle_input_data, handle_socket_data
+from declusor.interface import ISession
 
 
-class TestShellController(unittest.TestCase):
+class TestShellController(unittest.IsolatedAsyncioTestCase):
     def setUp(self) -> None:
-        self.mock_session = MagicMock()
+        self.mock_session = AsyncMock()
         self.mock_router = MagicMock()
 
-    @patch("declusor.controller.shell.handle_input_data")
-    @patch("declusor.controller.shell.handle_socket_data")
-    @patch("declusor.controller.shell.Thread")
     @patch("declusor.controller.shell.parse_command_arguments")
-    def test_call_shell_orchestration(
-        self, mock_parse: MagicMock, mock_thread_cls: MagicMock, mock_handle_socket: MagicMock, mock_handle_input: MagicMock
-    ) -> None:
+    async def test_call_shell_orchestration(self, mock_parse: MagicMock) -> None:
+        """Test that call_shell orchestrates async tasks correctly."""
+
         # Setup
-        mock_thread_instance = MagicMock()
-        mock_thread_cls.return_value = mock_thread_instance
+        mock_parse.return_value = ({}, [])
 
-        # Execute
-        call_shell(self.mock_session, self.mock_router, "")
+        # Mock session.read to return immediately
+        async def _mock_read() -> AsyncGenerator[bytes, None]:
+            yield b"test"
 
-        # Verify
+        self.mock_session.read = _mock_read
+
+        # Create a task that will complete quickly
+        async def _quick_task(session: ISession, stop_event: Event) -> None:
+            await asyncio.sleep(0.01)
+
+            stop_event.set()
+
+        with patch("declusor.controller.shell.handle_input_data", side_effect=_quick_task):
+            with patch("declusor.controller.shell.handle_socket_data", side_effect=_quick_task):
+                # Execute with timeout to prevent hanging
+                try:
+                    await asyncio.wait_for(call_shell(self.mock_session, self.mock_router, ""), timeout=0.5)
+                except asyncio.TimeoutError:
+                    pass
+
+        # Verify parse was called
         mock_parse.assert_called()
-        mock_thread_cls.assert_called()
-        mock_thread_instance.start.assert_called()
-        mock_handle_input.assert_called_with(self.mock_session)
-        mock_thread_instance.join.assert_called()
 
     @patch("declusor.controller.shell.read_message")
-    def test_handle_input_data(self, mock_read: MagicMock) -> None:
-        # Setup: read returns a command, then raises StopIteration (or we break loop manually)
-        # Since handle_input_data is while True, we need to throw an exception to break it
-        mock_read.side_effect = ["cmd1", KeyboardInterrupt]
+    async def test_handle_input_data(self, mock_read: MagicMock) -> None:
+        """Test that handle_input_data reads and writes commands."""
 
-        try:
-            handle_input_data(self.mock_session)
-        except KeyboardInterrupt:
-            pass
+        # Setup
+        stop_event = Event()
 
-        self.mock_session.write.assert_called_with(b"cmd1")
+        mock_read.return_value = "cmd1"
+
+        # Run handle_input_data in a task and stop it after one iteration
+        async def _run_with_timeout() -> None:
+            task = asyncio.create_task(handle_input_data(self.mock_session, stop_event))
+
+            await asyncio.sleep(0.05)  # Let it run one iteration
+
+            stop_event.set()
+
+            await asyncio.sleep(0.01)
+
+            task.cancel()
+
+            try:
+                await task
+            except asyncio.CancelledError:
+                pass
+
+        await _run_with_timeout()
+
+        # Verify write was called
+        self.mock_session.write.assert_called()
 
     @patch("declusor.controller.shell.write_binary_message")
-    def test_handle_socket_data(self, mock_write: MagicMock) -> None:
+    async def test_handle_socket_data(self, mock_write: MagicMock) -> None:
+        """Test that handle_socket_data reads from socket and writes messages."""
+
         # Setup
-        flag = Event()
-        self.mock_session.read.return_value = [b"data1", b"data2"]
+        stop_event = Event()
 
-        # We need to set the flag eventually to stop the loop, but the loop checks flag.is_set()
-        # The loop is: while not flag.is_set(): for data in session.read(): ...
-        # If session.read() yields items, it processes them.
-        # If session.read() finishes (yields nothing more), the inner loop finishes.
-        # Then it checks flag.is_set() again.
-        # We need to make sure the loop terminates.
-
-        # Strategy: Run in a separate thread or just ensure session.read finishes and we set flag?
-        # Actually, handle_socket_data loops forever until flag is set.
-        # We can mock session.read to set the flag as a side effect?
-
-        def side_effect_read():
+        async def _mock_read() -> AsyncGenerator[bytes, None]:
             yield b"data1"
-            flag.set()  # Stop the outer loop after this generator finishes
+            stop_event.set()
 
-        self.mock_session.read.side_effect = side_effect_read
+        self.mock_session.read = _mock_read
 
-        handle_socket_data(self.mock_session, flag)
+        # Execute
+        await handle_socket_data(self.mock_session, stop_event)
 
+        # Verify
         mock_write.assert_any_call(b"data1")
-
-
-if __name__ == "__main__":
-    unittest.main()

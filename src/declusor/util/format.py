@@ -13,7 +13,7 @@ def convert_bytes_to_hex(data: bytes) -> str:
 def format_client_bash_code(filepath: str, **kwargs: str | int) -> str:
     """Formats client code by reading a file, removing comments, and substituting variables."""
 
-    client_code = str()
+    client_code = ""
 
     with open(join(CLIENTS_DIR, filepath), "r", encoding="utf-8") as f:
         for line in f.readlines():
@@ -49,7 +49,7 @@ def escape_double_quotes(value: str) -> str:
 def format_bash_function_call(function: str, *args: str, use_double_quotes: bool = False) -> str:
     """Formats a Bash function call with properly escaped arguments."""
 
-    escaped_args = []
+    escaped_args: list[str] = []
 
     for arg in args:
         if use_double_quotes:

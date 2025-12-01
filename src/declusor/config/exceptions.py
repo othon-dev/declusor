@@ -16,5 +16,5 @@ class InvalidRoute(DeclusorException):
 class InvalidArgument(DeclusorException):
     """Argument cannot be processed for any reason."""
 
-    def __init__(self, route: str) -> None:
-        super().__init__(f"invalid argument: {route}")
+    def __init__(self, message: str) -> None:
+        super().__init__(f"invalid argument: {message}")

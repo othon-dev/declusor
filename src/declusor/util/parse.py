@@ -1,6 +1,6 @@
 import shlex
 from argparse import ArgumentParser
-from typing import NoReturn
+from typing import Any, Mapping, NoReturn, Type
 
 from declusor.config import ArgumentParsingError
 
@@ -14,7 +14,7 @@ class DeclusorArgumentParser(ArgumentParser):
         raise ArgumentParsingError(message)
 
 
-def parse_command_arguments(line: str, definitions: dict[str, type], allow_unknown: bool = False) -> tuple[dict[str, str], list[str]]:
+def parse_command_arguments(line: str, definitions: Mapping[str, Type[Any]], allow_unknown: bool = False) -> tuple[dict[str, str], list[str]]:
     """Parses command arguments from a string based on provided definitions."""
 
     if not definitions and not line.strip():

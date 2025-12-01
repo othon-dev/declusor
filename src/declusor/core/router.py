@@ -50,7 +50,7 @@ class Router(IRouter):
 
         key_length = max(map(len, self.route_table.keys())) + 1
 
-        documentation = str()
+        documentation = ""
 
         for route in self.route_table:
             documentation += f"{route:<{key_length}}: "
