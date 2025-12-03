@@ -1,5 +1,5 @@
 class DeclusorException(Exception):
-    """Base exception for declusor-related errors."""
+    """Base exception for Declusor-related errors."""
 
 
 class ArgumentParsingError(DeclusorException):
@@ -9,12 +9,27 @@ class ArgumentParsingError(DeclusorException):
 class InvalidRoute(DeclusorException):
     """Route cannot be processed for any reason."""
 
-    def __init__(self, route: str) -> None:
-        super().__init__(f"invalid route: {route}")
+    def __init__(self, /, route: str, *, description: str | None = None) -> None:
+        self.route = route
+        self.description = description
+
+        super().__init__(f"invalid route: {self.route!r}")
 
 
 class InvalidArgument(DeclusorException):
-    """Argument cannot be processed for any reason."""
+    """User supplied argument cannot be processed for any reason."""
 
-    def __init__(self, message: str) -> None:
-        super().__init__(f"invalid argument: {message}")
+    def __init__(self, /, argument: str, *, description: str | None = None) -> None:
+        self.argument = argument
+        self.description = description
+
+        super().__init__(f"invalid argument: {self.argument!r}")
+
+
+class InvalidOperation(DeclusorException):
+    """An internal operation cannot be performed for any reason."""
+
+    def __init__(self, /, description: str) -> None:
+        self.description = description
+
+        super().__init__(f"invalid operation: {self.description}")
