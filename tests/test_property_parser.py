@@ -5,7 +5,7 @@ from hypothesis import given
 from hypothesis import strategies as st
 
 from declusor.config import ArgumentParsingError
-from declusor.util.parse import parse_command_arguments
+from declusor.core.parse import parse_command_arguments
 
 
 class TestParserProperties(unittest.TestCase):

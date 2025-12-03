@@ -1,7 +1,7 @@
 import unittest
 
 from declusor.config import ArgumentParsingError
-from declusor.util.parse import parse_command_arguments
+from declusor.core import parse_command_arguments
 
 
 class TestParseUtil(unittest.TestCase):
