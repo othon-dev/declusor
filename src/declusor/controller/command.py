@@ -1,5 +1,5 @@
 from declusor.interface import IRouter, ISession
-from declusor.util import parse_command_arguments, write_binary_message
+from declusor.util import parse_command_arguments, write_binary_data
 
 
 async def call_command(session: ISession, router: IRouter, line: str) -> None:
@@ -10,4 +10,4 @@ async def call_command(session: ISession, router: IRouter, line: str) -> None:
     await session.write(arguments["command"].encode())
 
     async for data in session.read():
-        write_binary_message(data)
+        write_binary_data(data)

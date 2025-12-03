@@ -1,7 +1,7 @@
 from base64 import b64encode
 
 from declusor.interface import IRouter, ISession
-from declusor.util import format_bash_function_call, load_file_safely, parse_command_arguments, write_binary_message
+from declusor.util import format_bash_function_call, load_file_safely, parse_command_arguments, write_binary_data
 
 
 async def call_upload(session: ISession, router: IRouter, line: str) -> None:
@@ -17,4 +17,4 @@ async def call_upload(session: ISession, router: IRouter, line: str) -> None:
     await session.write(function_call.encode())
 
     async for data in session.read():
-        write_binary_message(data)
+        write_binary_data(data)

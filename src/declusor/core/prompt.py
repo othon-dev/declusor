@@ -2,7 +2,7 @@ import asyncio
 
 from declusor.config import DeclusorException
 from declusor.interface import IPrompt, IRouter, ISession
-from declusor.util import read_message, write_error_message
+from declusor.util import read_stripped_message, write_error_message
 from declusor.version import PROJECT_NAME
 
 
@@ -18,7 +18,7 @@ class PromptCLI(IPrompt):
     async def read_command(self) -> str:
         """Read command from user input."""
 
-        while not (command := await asyncio.to_thread(read_message, self.prompt)):
+        while not (command := await asyncio.to_thread(read_stripped_message, self.prompt)):
             continue
 
         return command

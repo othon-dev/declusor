@@ -2,7 +2,7 @@ import asyncio
 from asyncio import Event
 
 from declusor.interface import IRouter, ISession
-from declusor.util import parse_command_arguments, read_message, write_binary_message
+from declusor.util import parse_command_arguments, read_stripped_message, write_binary_data
 
 
 async def call_shell(session: ISession, router: IRouter, line: str) -> None:
@@ -51,7 +51,7 @@ async def handle_input_data(session: ISession, stop_event: Event) -> None:
     while not stop_event.is_set():
         # Run blocking input in a separate thread
         try:
-            command = await asyncio.to_thread(read_message)
+            command = await asyncio.to_thread(read_stripped_message)
 
             if command.strip():
                 await session.write(command.strip().encode())
@@ -67,7 +67,7 @@ async def handle_socket_data(session: ISession, stop_event: Event) -> None:
             if stop_event.is_set():
                 break
             if data:
-                write_binary_message(data)
+                write_binary_data(data)
     except Exception:
         pass
     finally:
