@@ -1,11 +1,13 @@
+from .parser import DeclusorParser
 from .prompt import PromptCLI
+from .readline import set_line_completer
 from .router import Router
 from .session import Session
-from .parser import DeclusorParser
 
 __all__ = [
+    "DeclusorParser",
     "PromptCLI",
     "Router",
     "Session",
-    "DeclusorParser",
+    "set_line_completer",
 ]

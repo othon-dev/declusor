@@ -2,7 +2,7 @@ import asyncio
 from os import chdir
 from os.path import exists, isdir
 
-from declusor import config, controller
+from declusor import config, controller, core
 from declusor.core import PromptCLI, Router, Session
 from declusor.interface import IRouter
 from declusor.util import format_client_script
@@ -35,7 +35,7 @@ async def run_service(host: str, port: int, client: str) -> None:
             raise FileNotFoundError(config.CLIENTS_DIR)
 
     chdir(config.SCRIPTS_DIR)
-    config.set_line_completer(*router.routes)
+    core.set_line_completer(*router.routes)
 
     print(format_client_script(client, HOST=host, PORT=port))
 
@@ -58,6 +58,6 @@ async def run_service(host: str, port: int, client: str) -> None:
     async with server:
         # Wait for the first session to connect
         session = await first_session_future
-
         prompt = PromptCLI(router, session)
+
         await prompt.run()
