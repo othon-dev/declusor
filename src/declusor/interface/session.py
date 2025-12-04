@@ -6,7 +6,7 @@ class ISession(ABC):
     """Session interface."""
 
     @abstractmethod
-    def set_timeout(self, value: float) -> None:
+    def set_timeout(self, value: float, /) -> None:
         """Set the session timeout."""
 
         raise NotImplementedError
@@ -18,7 +18,7 @@ class ISession(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def write(self, content: bytes) -> None:
+    async def write(self, content: bytes, /) -> None:
         """Write data to the session."""
 
         raise NotImplementedError

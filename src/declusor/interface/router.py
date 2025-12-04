@@ -25,19 +25,19 @@ class IRouter(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def get_controller_documentation(self, route: str) -> str:
+    def get_route_usage(self, route: str, /) -> str:
         """Returns the documentation of the controller associated with the given route."""
 
         raise NotImplementedError
 
     @abstractmethod
-    def connect(self, route: str, controller: Controller) -> None:
+    def connect(self, route: str, controller: Controller, /) -> None:
         """Connects a route to a controller."""
 
         raise NotImplementedError
 
     @abstractmethod
-    def locate(self, route: str) -> Controller:
+    def locate(self, route: str, /) -> Controller:
         """Locates the controller associated with the given route."""
 
         raise NotImplementedError

@@ -23,6 +23,7 @@ mypy = "^1.18.2"
 black = "^25.9.0"
 isort = "^6.1.0"
 hypothesis = "^6.0.0"
+pytest = "^8.3.4"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -37,6 +38,7 @@ disable = [
     "too-few-public-methods",
     "unused-argument",
     "broad-exception-caught",
+    "too-many-arguments"
 ]
 ignore-paths = [".venv/", "build/", "tests/"]
 

@@ -1,20 +1,19 @@
 from base64 import b64encode
 
-from declusor.interface import IRouter, ISession
-from declusor.util import format_bash_function_call, load_file_safely, parse_command_arguments, write_binary_message
+from declusor import error, interface, util
 
 
-async def call_execute(session: ISession, _: IRouter, line: str) -> None:
+async def call_execute(session: interface.ISession, router: interface.IRouter, line: str) -> None:
     """Execute a file on the remote system."""
 
-    arguments, unknown_arguments = parse_command_arguments(line, {"filepath": str}, allow_unknown=True)
+    arguments, unknown_arguments = util.parse_command_arguments(line, {"filepath": str}, allow_unknown=True)
 
-    if (file_content := load_file_safely(arguments["filepath"])) is None:
-        return
+    if (file_content := util.try_load_file(arguments["filepath"])) is None:
+        raise error.ControllerError("failed to load file content: " + arguments["filepath"])
 
-    function_call = format_bash_function_call("execute_base64_encoded_value", b64encode(file_content).decode(), *unknown_arguments)
+    function_call = util.format_function_call("bash", "execute_base64_encoded_value", b64encode(file_content).decode(), *unknown_arguments)
 
     await session.write(function_call.encode())
 
     async for data in session.read():
-        write_binary_message(data)
+        util.write_binary_data(data)

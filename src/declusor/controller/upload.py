@@ -1,4 +1,6 @@
-from declusor import interface, util, core, schema
+from base64 import b64encode
+
+from declusor import error, interface, util
 
 
 async def call_upload(session: interface.ISession, router: interface.IRouter, line: str) -> None:
@@ -7,10 +9,9 @@ async def call_upload(session: interface.ISession, router: interface.IRouter, li
     arguments, _ = util.parse_command_arguments(line, {"filepath": str})
 
     if (file_content := util.try_load_file(arguments["filepath"])) is None:
-        raise core.ControllerError("Failed to load the specified file.")
+        raise error.ControllerError("failed to load file content: " + arguments["filepath"])
 
-    file_base64 = util.convert_to_base64(file_content)
-    function_call = util.format_function_call(schema.STORE_FILE_FUNCTION, file_base64)
+    function_call = util.format_function_call("bash", "store_base64_encoded_value", b64encode(file_content).decode())
 
     await session.write(function_call.encode())
 

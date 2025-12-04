@@ -2,13 +2,10 @@ import asyncio
 from os import chdir
 from os.path import exists, isdir
 
-from declusor import config, controller
-from declusor.core import PromptCLI, Router, Session
-from declusor.interface import IRouter
-from declusor.util import format_client_bash_code
+from declusor import config, controller, core, interface, util, version
 
 
-def set_routes(router: IRouter) -> None:
+def set_routes(router: interface.IRouter) -> None:
     """Set up the routes for the router."""
 
     router.connect("load", controller.call_load)
@@ -25,7 +22,7 @@ async def run_service(host: str, port: int, client: str) -> None:
 
     directories = [config.CLIENTS_DIR, config.SCRIPTS_DIR, config.LIBRARY_DIR]
 
-    set_routes(router := Router())
+    set_routes(router := core.Router())
 
     for directory in directories:
         if exists(directory):
@@ -35,14 +32,15 @@ async def run_service(host: str, port: int, client: str) -> None:
             raise FileNotFoundError(config.CLIENTS_DIR)
 
     chdir(config.SCRIPTS_DIR)
-    config.set_line_completer(*router.routes)
+    core.set_line_completer(*router.routes)
 
-    print(format_client_bash_code(client, HOST=host, PORT=port))
+    print(util.format_client_script(client, HOST=host, PORT=port))
 
-    first_session_future: asyncio.Future[Session] = asyncio.Future()
+    first_session_future: asyncio.Future[interface.ISession] = asyncio.Future()
 
     async def client_handler(reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:
-        session = Session(reader, writer, config.DEFAULT_SRV_ACK, config.DEFAULT_CLT_ACK)
+        session = core.Session(reader, writer)
+
         await session.initialize()
 
         if not first_session_future.done():
@@ -56,8 +54,6 @@ async def run_service(host: str, port: int, client: str) -> None:
     server = await asyncio.start_server(client_handler, host, port)
 
     async with server:
-        # Wait for the first session to connect
         session = await first_session_future
 
-        prompt = PromptCLI(router, session)
-        await prompt.run()
+        await core.PromptCLI(version.PROJECT_NAME, router, session).run()
