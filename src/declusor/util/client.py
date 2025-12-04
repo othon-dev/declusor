@@ -1,7 +1,7 @@
 from shlex import quote
 from string import Template
 
-from declusor import config, enums, error
+from declusor import config, enums
 from declusor.util import encoding
 
 
@@ -49,7 +49,7 @@ def format_function_call(language: enums.Language, /, function_name: enums.FileF
         case enums.Language.BASH | enums.Language.SH:
             return _format_bash_function_call(function_name.value, *args)
         case _:
-            raise error.InvalidOperation(f"Unsupported language: {language}")
+            raise config.InvalidOperation(f"Unsupported language: {language}")
 
 
 def _format_bash_function_call(function_name: str, /, *args: str) -> str:

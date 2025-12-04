@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from declusor import config, error
+from declusor import config
 from declusor.util import security
 
 
@@ -23,7 +23,7 @@ def load_file(filepath: str | Path, /) -> bytes:
         with open(filepath, "rb") as f:
             return f.read()
     except OSError as e:
-        raise error.InvalidOperation(f"could not read file {filepath!r}: {e}") from e
+        raise config.InvalidOperation(f"could not read file {filepath!r}: {e}") from e
 
 
 def try_load_file(filepath: str | Path, /) -> bytes | None:
@@ -38,7 +38,7 @@ def try_load_file(filepath: str | Path, /) -> bytes | None:
 
     try:
         return load_file(filepath)
-    except error.InvalidOperation:
+    except config.InvalidOperation:
         return None
 
 
@@ -58,10 +58,10 @@ def load_payload(module_name: str, /) -> bytes:
     module_filepath = (config.MODULES_DIR / module_name).resolve()
 
     if not security.validate_file_extension(module_name, config.ALLOW_PAYLOAD_EXTENSIONS):
-        raise error.InvalidOperation(f"extension of {module_filepath.name!r} is not supported")
+        raise config.InvalidOperation(f"extension of {module_filepath.name!r} is not supported")
 
     if not security.validate_file_relative(module_filepath, config.MODULES_DIR):
-        raise error.InvalidOperation(f"{module_filepath!r} is outside the scripts directory")
+        raise config.InvalidOperation(f"{module_filepath!r} is outside the scripts directory")
 
     return load_file(module_filepath)
 
@@ -104,10 +104,10 @@ def ensure_file_exists(filepath: str | Path, /) -> Path:
     filepath = Path(filepath).resolve()
 
     if not filepath.exists():
-        raise error.InvalidOperation(f"file {filepath!r} does not exist")
+        raise config.InvalidOperation(f"file {filepath!r} does not exist")
 
     if not filepath.is_file():
-        raise error.InvalidOperation(f"{filepath!r} is not a file")
+        raise config.InvalidOperation(f"{filepath!r} is not a file")
 
     return filepath
 
@@ -128,9 +128,9 @@ def ensure_directory_exists(dirpath: str | Path, /) -> Path:
     dirpath = Path(dirpath).resolve()
 
     if not dirpath.exists():
-        raise error.InvalidOperation(f"directory {dirpath!r} does not exist")
+        raise config.InvalidOperation(f"directory {dirpath!r} does not exist")
 
     if not dirpath.is_dir():
-        raise error.InvalidOperation(f"{dirpath!r} is not a directory")
+        raise config.InvalidOperation(f"{dirpath!r} is not a directory")
 
     return dirpath
