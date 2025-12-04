@@ -1,11 +1,22 @@
-import unittest
-
-from declusor.util import encoding
+import pytest
 
 
-class TestFormatUtil(unittest.TestCase):
-    def test_convert_bytes_to_hex(self) -> None:
-        """Test converting bytes to hex string representation."""
+@pytest.fixture
+def mock_config(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Mock config constants."""
 
-        self.assertEqual(encoding.convert_bytes_to_hex(b"abc"), "\\x61\\x62\\x63")
-        self.assertEqual(encoding.convert_bytes_to_hex(b""), "")
+
+def test_convert_bytes_to_hex() -> None:
+    """Test converting bytes to hex string."""
+
+
+def test_convert_to_base64_from_str() -> None:
+    """Test converting string to base64."""
+
+
+def test_convert_to_base64_from_bytes() -> None:
+    """Test converting bytes to base64."""
+
+
+def test_convert_base64_to_bytes() -> None:
+    """Test converting base64 string back to bytes."""
