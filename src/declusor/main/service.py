@@ -31,7 +31,7 @@ async def run_service(host: str, port: int, client: str) -> None:
             raise FileNotFoundError(config.CLIENTS_DIR)
 
     chdir(config.MODULES_DIR)
-    util.console.setup_completer(router.routes)
+    core.console.setup_completer(router.routes)
 
     print(util.format_client_script(client, HOST=host, PORT=port))
 

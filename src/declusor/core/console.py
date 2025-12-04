@@ -41,10 +41,14 @@ class Console:
                 for filename in glob.glob(searching_file + "*", root_dir=target_dir):
                     filepath = os.path.join(target_dir, filename)
 
+                    # Prepend the searching directory to the filename so readline
+                    # replaces the entire path, not just the filename part.
+                    match_string = os.path.join(searching_dir, filename)
+
                     if os.path.isdir(filepath):
-                        files.append(os.path.join(filename, ""))
+                        files.append(os.path.join(match_string, ""))
                     elif os.path.isfile(filepath):
-                        files.append(filename)
+                        files.append(match_string)
             except OSError:
                 pass
 
@@ -75,7 +79,8 @@ class Console:
                     return _find_command(text, state)
                 case 2:
                     if commands[0] in command_routes:
-                        return _find_file(commands[1].strip(), state)
+                        # Complete file path for the argument
+                        return _find_file(text, state)
                 case _:
                     return None
 

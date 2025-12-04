@@ -1,5 +1,4 @@
 from .client import format_client_script, format_function_call
-from .console import Console, console
 from .encoding import convert_base64_to_bytes, convert_bytes_to_hex, convert_to_base64
 from .network import await_connection
 from .parsing import Parser, parse_command_arguments
@@ -8,8 +7,6 @@ from .storage import ensure_directory_exists, ensure_file_exists, load_file, loa
 
 __all__ = [
     "await_connection",
-    "console",
-    "Console",
     "convert_base64_to_bytes",
     "convert_bytes_to_hex",
     "convert_to_base64",
