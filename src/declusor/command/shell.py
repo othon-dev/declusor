@@ -53,7 +53,7 @@ class LaunchShell(interface.ICommand):
 
         while not self._stop_event.is_set():
             try:
-                command_request = await util.read_stripped_line_async()
+                command_request = await util.console.read_stripped_line()
 
                 if command_request.strip():
                     await session.write(command_request.strip().encode())
@@ -75,6 +75,6 @@ class LaunchShell(interface.ICommand):
                         break
 
                     if data:
-                        util.write_binary_data(data)
+                        util.console.write_binary_data(data)
         finally:
             self._stop_event.set()

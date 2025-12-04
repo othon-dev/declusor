@@ -10,4 +10,4 @@ async def call_upload(session: interface.ISession, router: interface.IRouter, li
     await command.UploadFile(filepath).execute(session)
 
     async for data in session.read():
-        util.write_binary_data(data)
+        util.console.write_binary_data(data)

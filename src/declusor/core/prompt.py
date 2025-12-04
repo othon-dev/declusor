@@ -13,7 +13,7 @@ class PromptCLI(interface.IPrompt):
     async def read_command(self) -> str:
         """Read command from user input."""
 
-        while not (command := await util.read_stripped_line_async(self._prompt)):
+        while not (command := await util.console.read_stripped_line(self._prompt)):
             continue
 
         return command
@@ -27,7 +27,7 @@ class PromptCLI(interface.IPrompt):
             case [route]:
                 await self._router.locate(route)(self._session, self._router, "")
             case _:
-                util.write_error_message(command)
+                util.console.write_error_message(command)
 
     async def run(self) -> None:
         """Run the CLI prompt loop."""
@@ -38,4 +38,4 @@ class PromptCLI(interface.IPrompt):
             except (error.ExitRequest, KeyboardInterrupt):
                 break
             except error.DeclusorException as e:
-                util.write_error_message(str(e))
+                util.console.write_error_message(str(e))

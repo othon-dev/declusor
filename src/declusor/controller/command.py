@@ -10,4 +10,4 @@ async def call_command(session: interface.ISession, router: interface.IRouter, l
     await command.ExecuteCommand(command_line).execute(session)
 
     async for data in session.read():
-        util.write_binary_data(data)
+        util.console.write_binary_data(data)

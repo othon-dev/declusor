@@ -10,4 +10,4 @@ async def call_load(session: interface.ISession, router: interface.IRouter, line
     await command.LoadPayload(filepath).execute(session)
 
     async for data in session.read():
-        util.write_binary_data(data)
+        util.console.write_binary_data(data)
