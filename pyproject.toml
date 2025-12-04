@@ -39,8 +39,7 @@ disable = [
     "too-few-public-methods",
     "too-many-arguments",
     "too-many-locals",
-    "too-many-positional-arguments",
-    "unused-argument",
+    "unused-argument"
 ]
 ignore-paths = [".venv/", "build/", "tests/"]
 

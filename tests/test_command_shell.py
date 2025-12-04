@@ -26,6 +26,5 @@ def test_launch_shell_exception_handling() -> None:
     """Test LaunchShell exception handling (BaseException vs Exception)."""
 
 
-@pytest.mark.asyncio
-async def test_launch_shell_keyboard_interrupt():
+def test_launch_shell_keyboard_interrupt() -> None:
     """Test that LaunchShell.execute handles KeyboardInterrupt gracefully."""

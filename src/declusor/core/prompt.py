@@ -1,5 +1,3 @@
-import asyncio
-
 from declusor import error, interface, util
 
 
@@ -15,7 +13,7 @@ class PromptCLI(interface.IPrompt):
     async def read_command(self) -> str:
         """Read command from user input."""
 
-        while not (command := await asyncio.to_thread(util.read_stripped_message, self._prompt)):
+        while not (command := await util.read_stripped_line_async(self._prompt)):
             continue
 
         return command

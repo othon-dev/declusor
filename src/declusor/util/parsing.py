@@ -20,9 +20,6 @@ class Parser(ArgumentParser):
         prog: str | None = None,
         usage: str | None = None,
         description: str | None = None,
-        epilog: str | None = None,
-        prefix_chars: str = "-",
-        argument_default: Any = None,
         add_help: bool = True,
     ) -> None:
         formatter_class = self.get_formatter_class()
@@ -31,10 +28,7 @@ class Parser(ArgumentParser):
             prog=prog,
             usage=usage,
             description=description,
-            epilog=epilog,
             formatter_class=formatter_class,
-            prefix_chars=prefix_chars,
-            argument_default=argument_default,
             add_help=add_help,
         )
 

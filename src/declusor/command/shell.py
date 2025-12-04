@@ -21,17 +21,17 @@ class LaunchShell(interface.ICommand):
         """
 
         input_task = asyncio.create_task(self._handle_command_request(session))
-        socket_task = asyncio.create_task(self._handle_command_response(session))
+        output_task = asyncio.create_task(self._handle_command_response(session))
 
         try:
-            await asyncio.wait([input_task, socket_task], return_when=asyncio.FIRST_COMPLETED)
+            await asyncio.wait([input_task, output_task], return_when=asyncio.FIRST_COMPLETED)
         except (asyncio.CancelledError, KeyboardInterrupt):
             pass
         finally:
             self._stop_event.set()
 
             input_task.cancel()
-            socket_task.cancel()
+            output_task.cancel()
 
             try:
                 await input_task
@@ -39,7 +39,7 @@ class LaunchShell(interface.ICommand):
                 pass
 
             try:
-                await socket_task
+                await output_task
             except asyncio.CancelledError:
                 pass
 
@@ -53,7 +53,7 @@ class LaunchShell(interface.ICommand):
 
         while not self._stop_event.is_set():
             try:
-                command_request = await asyncio.to_thread(util.read_stripped_message)
+                command_request = await util.read_stripped_line_async()
 
                 if command_request.strip():
                     await session.write(command_request.strip().encode())
