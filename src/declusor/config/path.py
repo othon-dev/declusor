@@ -12,5 +12,5 @@ CLIENTS_DIR = (DATA_DIR / "clients").resolve()
 MODULES_DIR = (DATA_DIR / "modules").resolve()
 """Normalized modules directory path."""
 
-LIBRARY_DIR = (DATA_DIR / "lib").resolve()
+LIBRARY_DIR = (DATA_DIR / "library").resolve()
 """Normalized library directory path."""
