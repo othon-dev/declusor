@@ -82,9 +82,10 @@ def load_library() -> bytes:
         if not security.validate_file_extension(file, config.ALLOW_LIBRARY_EXTENSIONS):
             continue
 
-        modules.append(load_file(file.name))
+        if module_content := try_load_file(file):
+            modules.append(module_content)
 
-    return b"\n".join(modules)
+    return b"\n\n".join(modules)
 
 
 def ensure_file_exists(filepath: str | Path, /) -> Path:

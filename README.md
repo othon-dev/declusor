@@ -11,7 +11,7 @@ Its intelligent command-line interface boosts productivity with smart command an
 
 > [!WARNING]
 > **Legal Notice**: This software is intended solely for educational use and authorized security research. The developers assume no liability for any misuse or unlawful activity carried out with this tool. Executing this software on networks or systems without ownership or explicit, written authorization for any form of testing or operation is strictly prohibited.
-> 
+
 ## Features
 
 - **Shell Management**: Establish, maintain, and interact with remote shell sessions.
