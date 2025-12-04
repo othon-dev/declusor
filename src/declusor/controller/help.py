@@ -1,11 +1,10 @@
-from declusor.interface import IRouter, ISession
-from declusor.util import write_string_message
+from declusor import interface, util
 
 
-async def call_help(session: ISession, router: IRouter, line: str) -> None:
+async def call_help(session: interface.ISession, router: interface.IRouter, line: str) -> None:
     """Display help information about available commands."""
 
     if line:
-        write_string_message(router.get_controller_documentation(line))
+        util.write_string_message(router.get_route_usage(line))
     else:
-        write_string_message(router.documentation)
+        util.write_string_message(router.documentation)

@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from declusor import core, config
+from declusor import config, error
 from declusor.util import security
 
 
@@ -23,7 +23,7 @@ def load_file(filepath: str | Path, /) -> bytes:
         with open(filepath, "rb") as f:
             return f.read()
     except OSError as e:
-        raise core.InvalidOperation(f"could not read file {filepath!r}: {e}") from e
+        raise error.InvalidOperation(f"could not read file {filepath!r}: {e}") from e
 
 
 def try_load_file(filepath: str | Path, /) -> bytes | None:
@@ -38,7 +38,7 @@ def try_load_file(filepath: str | Path, /) -> bytes | None:
 
     try:
         return load_file(filepath)
-    except core.InvalidOperation:
+    except error.InvalidOperation:
         return None
 
 
@@ -58,10 +58,10 @@ def load_payload(module_filename: str, /) -> bytes:
     module_filepath = (config.SCRIPTS_DIR / module_filename).resolve()
 
     if not security.validate_file_extension(module_filename, config.ALLOW_PAYLOAD_EXTENSIONS):
-        raise core.InvalidOperation(f"extension of {module_filepath.name!r} is not supported")
+        raise error.InvalidOperation(f"extension of {module_filepath.name!r} is not supported")
 
     if not security.validate_file_relative(module_filepath, config.SCRIPTS_DIR):
-        raise core.InvalidOperation(f"{module_filepath!r} is outside the scripts directory")
+        raise error.InvalidOperation(f"{module_filepath!r} is outside the scripts directory")
 
     return load_file(module_filepath)
 
@@ -103,10 +103,10 @@ def ensure_file_exists(filepath: str | Path, /) -> Path:
     filepath = Path(filepath).resolve()
 
     if not filepath.exists():
-        raise core.InvalidOperation(f"file {filepath!r} does not exist")
+        raise error.InvalidOperation(f"file {filepath!r} does not exist")
 
     if not filepath.is_file():
-        raise core.InvalidOperation(f"{filepath!r} is not a file")
+        raise error.InvalidOperation(f"{filepath!r} is not a file")
 
     return filepath
 
@@ -127,9 +127,9 @@ def ensure_directory_exists(dirpath: str | Path, /) -> Path:
     dirpath = Path(dirpath).resolve()
 
     if not dirpath.exists():
-        raise core.InvalidOperation(f"directory {dirpath!r} does not exist")
+        raise error.InvalidOperation(f"directory {dirpath!r} does not exist")
 
     if not dirpath.is_dir():
-        raise core.InvalidOperation(f"{dirpath!r} is not a directory")
+        raise error.InvalidOperation(f"{dirpath!r} is not a directory")
 
     return dirpath

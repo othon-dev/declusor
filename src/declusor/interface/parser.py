@@ -3,6 +3,8 @@ from typing import TypedDict
 
 
 class DeclusorArguments(TypedDict):
+    """Arguments for the application."""
+
     host: str
     port: int
     client: str

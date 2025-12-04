@@ -1,7 +1,7 @@
 from argparse import ArgumentParser, HelpFormatter
 from typing import NoReturn
 
-from declusor import config, interface
+from declusor import config, error, interface
 
 
 class DeclusorParser(ArgumentParser):
@@ -31,12 +31,12 @@ class DeclusorParser(ArgumentParser):
         try:
             return interface.DeclusorArguments(host=args.host, port=args.port, client=args.client)
         except AttributeError as e:
-            raise config.ArgumentParsingError(f"Missing argument: {e.name}") from e
+            raise error.ParserError(f"Missing argument: {e.name}") from e
 
     def error(self, message: str) -> NoReturn:
         """Overrides the default ArgumentParser error behavior."""
 
-        raise config.ArgumentParsingError(message)
+        raise error.ParserError(message)
 
     @staticmethod
     def _create_formatter(*, prog: str) -> HelpFormatter:

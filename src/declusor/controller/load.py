@@ -1,20 +1,15 @@
-from declusor.config import InvalidArgument
-from declusor.interface import IRouter, ISession
-from declusor.util import load_payload, parse_command_arguments, write_binary_data, write_error_message
+from declusor import error, interface, util
 
 
-async def call_load(session: ISession, router: IRouter, line: str) -> None:
+async def call_load(session: interface.ISession, router: interface.IRouter, line: str) -> None:
     """Load a payload from a file and send it to the remote system."""
 
-    arguments, _ = parse_command_arguments(line, {"payload": str})
+    arguments, _ = util.parse_command_arguments(line, {"payload": str})
 
-    try:
-        payload = load_payload(arguments["payload"])
-    except InvalidArgument as err:
-        write_error_message(err)
-        return
+    if (payload := util.try_load_file(arguments["payload"])) is None:
+        raise error.ControllerError("failed to load file content: " + arguments["payload"])
 
     await session.write(payload)
 
     async for data in session.read():
-        write_binary_data(data)
+        util.write_binary_data(data)

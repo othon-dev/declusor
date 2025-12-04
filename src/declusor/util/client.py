@@ -1,7 +1,7 @@
 from shlex import quote
 from string import Template
 
-from declusor import config
+from declusor import config, error
 from declusor.util import encoding
 
 
@@ -49,7 +49,7 @@ def format_function_call(language: str, /, function_name: str, *args: str) -> st
         case "bash" | "sh":
             return _format_bash_function_call(function_name, *args)
         case _:
-            raise config.InvalidOperation(f"Unsupported language: {language}")
+            raise error.InvalidOperation(f"Unsupported language: {language}")
 
 
 def _format_bash_function_call(function_name: str, /, *args: str) -> str:

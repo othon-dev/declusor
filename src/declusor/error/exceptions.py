@@ -2,11 +2,20 @@ class DeclusorException(Exception):
     """Base exception for Declusor-related errors."""
 
 
-class ArgumentParsingError(DeclusorException):
+class InvalidOperation(DeclusorException):
+    """An internal operation cannot be performed for any reason."""
+
+    def __init__(self, /, description: str) -> None:
+        self.description = description
+
+        super().__init__(f"invalid operation: {self.description}")
+
+
+class ParserError(DeclusorException):
     """Error parsing command-line arguments."""
 
 
-class InvalidRoute(DeclusorException):
+class RouterError(DeclusorException):
     """Route cannot be processed for any reason."""
 
     def __init__(self, /, route: str, *, description: str | None = None) -> None:
@@ -16,7 +25,7 @@ class InvalidRoute(DeclusorException):
         super().__init__(f"invalid route: {self.route!r}")
 
 
-class InvalidArgument(DeclusorException):
+class PromptError(DeclusorException):
     """User supplied argument cannot be processed for any reason."""
 
     def __init__(self, /, argument: str, *, description: str | None = None) -> None:
@@ -24,15 +33,6 @@ class InvalidArgument(DeclusorException):
         self.description = description
 
         super().__init__(f"invalid argument: {self.argument!r}")
-
-
-class InvalidOperation(DeclusorException):
-    """An internal operation cannot be performed for any reason."""
-
-    def __init__(self, /, description: str) -> None:
-        self.description = description
-
-        super().__init__(f"invalid operation: {self.description}")
 
 
 class ControllerError(DeclusorException):

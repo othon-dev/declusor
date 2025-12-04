@@ -2,7 +2,7 @@ import shlex
 from argparse import ArgumentParser
 from typing import Any, Mapping, Type
 
-from declusor import config
+from declusor import error
 
 ArgumentDefinitions = Mapping[str, Type[Any]]
 """The definitions: `argument name` -> `expected type`"""
@@ -36,14 +36,14 @@ def parse_command_arguments(line: str, definitions: ArgumentDefinitions, allow_u
 
     for arg_name, arg_type in definitions.items():
         if arg_type not in {str, int}:
-            raise config.InvalidOperation(f"Argument type {arg_type!r} for {arg_name!r} is not supported.")
+            raise error.InvalidOperation(f"Argument type {arg_type!r} for {arg_name!r} is not supported.")
 
         parser.add_argument(arg_name, type=arg_type)
 
     try:
         args_list = shlex.split(line)
     except ValueError as e:
-        raise config.InvalidOperation(f"Parsing error: {e}") from e
+        raise error.InvalidOperation(f"Parsing error: {e}") from e
 
     if allow_unknown:
         namespace, unrecognized_args = parser.parse_known_args(args_list)
