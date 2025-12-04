@@ -71,7 +71,7 @@ def parse_command_arguments(line: str, definitions: ArgumentDefinitions, allow_u
         InvalidOperation: If an argument type is not supported or if there is a parsing error.
     """
 
-    SUPPORTED_TYPES: set[Type[Any]] = {str, int}
+    supported_types: set[Type[Any]] = {str, int}
 
     if not definitions and not line.strip():
         return {}, []
@@ -90,7 +90,7 @@ def parse_command_arguments(line: str, definitions: ArgumentDefinitions, allow_u
                 if actual_types := [a for a in origin_types if a is not type(None)]:
                     arg_type = actual_types[0]
 
-        if arg_type not in SUPPORTED_TYPES:
+        if arg_type not in supported_types:
             raise error.InvalidOperation(f"Argument type {arg_type!r} for {arg_name!r} is not supported.")
 
         kwargs: dict[str, Any] = {"type": arg_type}
