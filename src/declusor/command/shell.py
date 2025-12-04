@@ -25,7 +25,7 @@ class LaunchShell(interface.ICommand):
 
         try:
             await asyncio.wait([input_task, socket_task], return_when=asyncio.FIRST_COMPLETED)
-        except asyncio.CancelledError:
+        except (asyncio.CancelledError, KeyboardInterrupt):
             pass
         finally:
             self._stop_event.set()
