@@ -1,4 +1,4 @@
-from declusor import interface, util, command
+from declusor import command, interface, util
 
 
 async def call_command(session: interface.ISession, router: interface.IRouter, line: str) -> None:

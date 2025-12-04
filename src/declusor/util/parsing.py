@@ -1,6 +1,6 @@
 import shlex
 from argparse import ArgumentParser, HelpFormatter
-from typing import Any, Mapping, Type, get_origin, get_args, Union, NoReturn, Callable
+from typing import Any, Callable, Mapping, NoReturn, Type, Union, get_args, get_origin
 
 from declusor import error
 

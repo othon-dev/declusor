@@ -1,11 +1,11 @@
 from shlex import quote
 from string import Template
 
-from declusor import config, error, enums
+from declusor import config, enums, error
 from declusor.util import encoding
 
 _SupportedLanguages = enums.Language
-_SupportedFunctions = enums.ExecuteFunc | enums.UploadFunc
+_SupportedFunctions = enums.FileFunc
 
 
 def format_client_script(client_name: str, /, **kwargs: str | int) -> str:

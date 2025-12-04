@@ -1,8 +1,7 @@
-from .upload import UploadFile
-from .shell import LaunchShell
-from .load import LoadPayload
-from .execute import ExecuteFile
 from .command import ExecuteCommand
+from .file import ExecuteFile, UploadFile
+from .load import LoadPayload
+from .shell import LaunchShell
 
 __all__ = [
     "UploadFile",
