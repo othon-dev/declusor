@@ -1,24 +1,21 @@
 import asyncio
 
-from declusor.config import DeclusorException
-from declusor.interface import IPrompt, IRouter, ISession
-from declusor.util import read_message, write_error_message
-from declusor.version import PROJECT_NAME
+from declusor import error, interface, util
 
 
-class PromptCLI(IPrompt):
+class PromptCLI(interface.IPrompt):
     """CLI prompt implementation."""
 
-    prompt = f"[{PROJECT_NAME}] "
+    def __init__(self, name: str, router: interface.IRouter, session: interface.ISession) -> None:
+        self._prompt = f"[{name}] "
 
-    def __init__(self, router: IRouter, session: ISession) -> None:
-        self.router = router
-        self.session = session
+        self._router = router
+        self._session = session
 
     async def read_command(self) -> str:
         """Read command from user input."""
 
-        while not (command := await asyncio.to_thread(read_message, self.prompt)):
+        while not (command := await asyncio.to_thread(util.read_stripped_message, self._prompt)):
             continue
 
         return command
@@ -28,11 +25,11 @@ class PromptCLI(IPrompt):
 
         match command.split(" ", 1):
             case [route, argument]:
-                await self.router.locate(route)(self.session, self.router, argument.strip())
+                await self._router.locate(route)(self._session, self._router, argument.strip())
             case [route]:
-                await self.router.locate(route)(self.session, self.router, "")
+                await self._router.locate(route)(self._session, self._router, "")
             case _:
-                write_error_message(command)
+                util.write_error_message(command)
 
     async def run(self) -> None:
         """Run the CLI prompt loop."""
@@ -40,5 +37,5 @@ class PromptCLI(IPrompt):
         while True:
             try:
                 await self.handle_route(await self.read_command())
-            except DeclusorException as err:
-                write_error_message(str(err))
+            except error.DeclusorException as err:
+                util.write_error_message(str(err))

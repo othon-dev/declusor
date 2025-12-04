@@ -1,20 +1,20 @@
-# Declusor: A Python-Based Reverse Shell Client
+# Declusor: A Remote Control and Payload Delivery Client
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Python 3.x](https://img.shields.io/badge/python-3.x-blue.svg)
 
-Declusor is an extremely effective and flexible tool written in Python, designed with a modular architecture that allows its components to be easily customized. It's a valuable tool for penetration testers, CTF enthusiasts, and cybersecurity professionals, offering streamlined payload delivery and reliable remote control.
+**Declusor** is a fast, flexible, and modular Python tool built for penetration testers, CTF players, and security professionals. It streamlines payload delivery and provides reliable remote control through a unified, interactive CLI.
 
-Its command-line interface significantly enhances productivity through intelligent command and file path completion, ensuring reliability and precision in remote operations.
+Its intelligent command-line interface boosts productivity with smart command and path completion, while supporting remote command execution, interactive sessions, payload management, and file transfers — all in one place.
 
-[![asciicast](https://asciinema.org/a/VdFuA3q0fiG64sh2TadaGBspe.svg)](https://asciinema.org/a/VdFuA3q0fiG64sh2TadaGBspe)
+[![Declusor Capabilities Demonstration](https://i.imgur.com/BwmiGK3.gif)](https://asciinema.org/a/e3f2q9TH9q7QylDBpHPy6Deme)
 
 > [!WARNING]
-> **Legal Notice**: This software is strictly intended for educational purposes and authorized security research. The developers decline any responsibility arising from the misuse of this tool. The execution of Declusor is prohibited on networks or systems for which the operator does not hold ownership or explicit and documented authorization for penetration testing.
+> **Legal Notice**: This software is intended solely for educational use and authorized security research. The developers assume no liability for any misuse or unlawful activity carried out with this tool. Executing this software on networks or systems without ownership or explicit, written authorization for any form of testing or operation is strictly prohibited.
 
 ## Features
 
-- **Reverse Shell Management**: Easily establish and interact with a reverse shell on a target machine.
+- **Shell Management**: Establish, maintain, and interact with remote shell sessions.
 - **Command Execution**: Execute arbitrary commands on the remote system with output captured by the client.
 - **Interactive Shell**: Open a full interactive shell session for seamless interaction with the remote environment.
 - **File Uploads**: Transfer files from the local machine to the remote target.
