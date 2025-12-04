@@ -44,11 +44,12 @@ class LaunchShell(interface.ICommand):
 
     async def _handle_command_response(self, session: interface.ISession) -> None:
         try:
-            async for data in session.read():
-                if self._stop_event.is_set():
-                    break
+            while not self._stop_event.is_set():
+                async for data in session.read():
+                    if self._stop_event.is_set():
+                        break
 
-                if data:
-                    util.write_binary_data(data)
+                    if data:
+                        util.write_binary_data(data)
         finally:
             self._stop_event.set()
