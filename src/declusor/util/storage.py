@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from declusor import config
-from declusor.util import sanitize
+from declusor.util import security
 
 
 def load_file(filepath: str | Path) -> bytes:
@@ -49,10 +49,10 @@ def load_payload(module_filename: str) -> bytes:
 
     module_filepath = (config.SCRIPTS_DIR / module_filename).resolve()
 
-    if not sanitize.validate_file_extension(module_filename, config.ALLOW_PAYLOAD_EXTENSIONS):
+    if not security.validate_file_extension(module_filename, config.ALLOW_PAYLOAD_EXTENSIONS):
         raise config.InvalidOperation(f"extension of {module_filepath.name!r} is not supported")
 
-    if not sanitize.validate_file_relative(module_filepath, config.SCRIPTS_DIR):
+    if not security.validate_file_relative(module_filepath, config.SCRIPTS_DIR):
         raise config.InvalidOperation(f"{module_filepath!r} is outside the scripts directory")
 
     return load_file(module_filepath)
@@ -72,7 +72,7 @@ def load_library() -> bytes:
         if not file.is_file():
             continue
 
-        if not sanitize.validate_file_extension(file, config.ALLOW_LIBRARY_EXTENSIONS):
+        if not security.validate_file_extension(file, config.ALLOW_LIBRARY_EXTENSIONS):
             continue
 
         modules.append(load_file(file.name))

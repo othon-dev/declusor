@@ -29,13 +29,13 @@ def format_client_script(client_name: str, /, **kwargs: str | int) -> str:
     return client_template.safe_substitute(**kwargs)
 
 
-def format_function_call(function_name: str, language: str, /, *args: str) -> str:
+def format_function_call(language: str, /, function_name: str, *args: str) -> str:
     """
     Format a function call with properly escaped arguments.
 
     Args:
-        function_name: The name of the function to call.
         language: The programming language of the function (e.g., 'bash', 'sh').
+        function_name: The name of the function to call.
         *args: Variable length argument list to pass to the function.
 
     Returns:
