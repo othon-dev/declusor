@@ -66,5 +66,5 @@ jobs:
         run: poetry run pylint $(git ls-files '*.py') -v
 
       # Run tests
-      - name: Run tests (unittest)
-        run: poetry run python -m unittest discover tests
+      - name: Run tests (pytest)
+        run: poetry run pytest
