@@ -1,20 +1,22 @@
 from abc import ABC, abstractmethod
-from typing import TypedDict
+from typing import Generic, TypeVar
+
+T = TypeVar("T")
 
 
-class DeclusorArguments(TypedDict):
-    """Arguments for the application."""
-
-    host: str
-    port: int
-    client: str
-
-
-class IParser(ABC):
-    """Argument parser interface."""
+class IParser(ABC, Generic[T]):
+    """Abstract base class defining the argument parser interface.
+    
+    Generic parser interface for parsing command-line arguments into
+    a specific type T.
+    """
 
     @abstractmethod
-    async def parse(self) -> DeclusorArguments:
-        """Parse command-line arguments."""
+    def parse(self) -> T:
+        """Parse command-line arguments.
+        
+        Returns:
+            Parsed arguments of type T.
+        """
 
         raise NotImplementedError

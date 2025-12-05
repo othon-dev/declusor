@@ -1,4 +1,13 @@
 from enum import StrEnum
+from typing import TypedDict
+
+
+class DeclusorOptions(TypedDict):
+    """Arguments for the application."""
+
+    host: str
+    port: int
+    client: str
 
 
 class FileFunc(StrEnum):
