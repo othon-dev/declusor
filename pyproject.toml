@@ -1,11 +1,11 @@
 [tool.poetry]
 name = "declusor"
-description = "declusor is a versatile payload delivery handler designed to manage the delivery of Bash script payloads to Linux machines."
+description = "Provides a unified, interactive CLI for remotely executing scripts, managing payloads, establishing interactive command sessions, and handling file transfers across remote environments."
 version = "0.2.0"
 readme = "README.md"
 license = "LICENSE"
 authors = ["Othon Hugo <othonhugo@users.noreply.github.com>"]
-keywords = ["bash", "security", "post-exploitation", "payload-delivery", "infosec"]
+keywords = ["security", "infosec", "cybersecurity", "pentesting", "ctf", "linux", "scripting", "framework", "post-exploitation", "payload-delivery"]
 classifiers = ["Development Status :: 4 - Beta", "Programming Language :: Python :: 3.10"]
 packages = [{ include = "declusor", from = "src" }]
 
@@ -24,6 +24,7 @@ black = "^25.9.0"
 isort = "^6.1.0"
 hypothesis = "^6.0.0"
 pytest = "^8.3.4"
+pytest-asyncio = "^0.24.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -76,3 +77,6 @@ addopts = "-raqsv --strict-markers --tb=no"
 pythonpath = ["src"]
 testpaths = ["tests"]
 norecursedirs = [".vscode", "__pycache__"]
+markers = [
+    "asyncio: mark test as an asyncio test",
+]
