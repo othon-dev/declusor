@@ -8,12 +8,14 @@ This package serves as the application's entry point and orchestrator:
 
 - **Application Bootstrap**: Initializes all required components and establishes connections.
 - **Service Lifecycle**: Manages the startup, execution, and shutdown sequences.
-- **Error Handling**: Provides top-level exception handling for unrecoverable errors.
+- **Dependency Injection**: Wires together core implementations and injects them where needed.
 - **Component Wiring**: Connects controllers to the router and prepares the runtime environment.
+- **Error Handling**: Provides top-level exception handling for unrecoverable errors.
 
 ## Design Principles
 
 1. **Single Entry Point**: The application has one clearly defined starting point.
-2. **Graceful Degradation**: Errors during startup result in meaningful messages rather than stack traces.
-3. **Clean Shutdown**: Resources are properly released during application termination.
-4. **Minimal Logic**: Business logic resides in other packages; main handles only orchestration.
+2. **Dependency on Core**: Main depends on core implementations, not the other way around.
+3. **Graceful Degradation**: Errors during startup result in meaningful messages rather than stack traces.
+4. **Clean Shutdown**: Resources are properly released during application termination.
+5. **Minimal Logic**: Business logic resides in other packages; main handles only orchestration.

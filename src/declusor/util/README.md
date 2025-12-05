@@ -2,6 +2,9 @@
 
 The **util** package provides a collection of stateless helper functions and utilities used throughout the application. These utilities perform common operations that are not specific to any single component.
 
+> [!NOTE]
+> This package provides cross-cutting concerns and is used throughout the application without creating circular dependencies.
+
 ## Purpose
 
 This package offers reusable functionality across all layers of the application:
@@ -19,6 +22,7 @@ This package offers reusable functionality across all layers of the application:
 2. **Single Purpose**: Each function performs exactly one well-defined operation.
 3. **Defensive Programming**: Functions validate inputs and provide clear error messages.
 4. **Type Safety**: Functions use type hints and handle type conversions explicitly.
+5. **Minimal Dependencies**: Depends only on `config` for exceptions and constants.
 
 ## Usage Guidelines
 

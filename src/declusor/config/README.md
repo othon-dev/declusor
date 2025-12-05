@@ -2,6 +2,9 @@
 
 The **config** package provides the centralized configuration, constants, enumeration types, and exception definitions used throughout the application. It serves as the foundation for consistent behavior and error handling across all components.
 
+> [!NOTE]
+> This package sits at the foundation of the dependency hierarchy, providing shared types and configuration.
+
 ## Purpose
 
 This package establishes the core parameters and types that govern application behavior:
@@ -17,8 +20,4 @@ This package establishes the core parameters and types that govern application b
 2. **Immutability**: Configuration values are treated as constants and should not be modified at runtime.
 3. **Type Safety**: Enumerations and typed exceptions prevent invalid states and improve code clarity.
 4. **Semantic Exceptions**: Each exception type conveys specific meaning about the error condition.
-
-## Relationship to Other Packages
-
-- **Used by**: All other packages within the application
-- **Dependencies**: Standard library only (no external dependencies)
+5. **Zero Dependencies**: This package has no dependencies on other application packages.
