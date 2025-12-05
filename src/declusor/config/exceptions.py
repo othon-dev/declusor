@@ -1,5 +1,19 @@
 class DeclusorException(Exception):
-    """Base exception for Declusor-related errors."""
+class DeclusorWarning(Warning):
+    """Base warning for Declusor-related warnings.
+    
+    Used to signal non-critical issues that don't prevent operation but should be brought to the user's attention.
+    """
+
+    def __init__(self, /, description: str) -> None:
+        """Initialize the warning.
+        
+        Args:
+            description: Human-readable description of the warning.
+        """
+        self.description = description
+
+        super().__init__(self.description)
 
 
 class InvalidOperation(DeclusorException):

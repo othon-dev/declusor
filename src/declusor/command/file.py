@@ -20,7 +20,7 @@ class _BaseFileCommand(interface.ICommand):
         self._filepath = util.ensure_file_exists(filepath)
         self._language = language
 
-    async def execute(self, session: interface.ISession, /) -> None:
+    async def execute(self, session: interface.ISession, console: interface.IConsole, /) -> None:
         """
         Execute the command on the session.
 

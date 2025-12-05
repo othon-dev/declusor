@@ -1,5 +1,5 @@
-from .namespace import FileFunc, Language, DeclusorOptions
-from .exceptions import ControllerError, DeclusorException, ExitRequest, InvalidOperation, ParserError, PromptError, RouterError
+from .exceptions import ControllerError, DeclusorException, DeclusorWarning, ExitRequest, InvalidOperation, ParserError, PromptError, RouterError
+from .namespace import DeclusorOptions, FileFunc, Language
 from .settings import BasePath, Settings
 
 __all__ = [
@@ -7,6 +7,7 @@ __all__ = [
     "ControllerError",
     "DeclusorException",
     "DeclusorOptions",
+    "DeclusorWarning",
     "ExitRequest",
     "FileFunc",
     "InvalidOperation",

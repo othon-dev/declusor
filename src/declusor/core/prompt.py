@@ -1,20 +1,20 @@
 from declusor import config, interface
-from declusor.core.console import console
 
 
 class PromptCLI(interface.IPrompt):
     """CLI prompt implementation."""
 
-    def __init__(self, name: str, router: interface.IRouter, session: interface.ISession) -> None:
+    def __init__(self, name: str, router: interface.IRouter, session: interface.ISession, console: interface.IConsole) -> None:
         self._prompt = f"[{name}] "
 
         self._router = router
         self._session = session
+        self._console = console
 
     async def read_command(self) -> str:
         """Read command from user input."""
 
-        while not (command := await console.read_stripped_line(self._prompt)):
+        while not (command := await self._console.read_stripped_line(self._prompt)):
             continue
 
         return command
@@ -24,11 +24,11 @@ class PromptCLI(interface.IPrompt):
 
         match command.split(" ", 1):
             case [route, argument]:
-                await self._router.locate(route)(self._session, self._router, argument.strip())
+                await self._router.locate(route)(self._session, self._console, argument.strip())
             case [route]:
-                await self._router.locate(route)(self._session, self._router, "")
+                await self._router.locate(route)(self._session, self._console, "")
             case _:
-                console.write_error_message(command)
+                self._console.write_error_message(command)
 
     async def run(self) -> None:
         """Run the CLI prompt loop."""
@@ -39,4 +39,4 @@ class PromptCLI(interface.IPrompt):
             except (config.ExitRequest, KeyboardInterrupt):
                 break
             except config.DeclusorException as e:
-                console.write_error_message(str(e))
+                self._console.write_error_message(str(e))
