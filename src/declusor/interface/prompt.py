@@ -9,7 +9,7 @@ class IPrompt(ABC):
     """
 
     @abstractmethod
-    async def run(self) -> None:
+    def run(self) -> None:
         """Run the prompt loop.
 
         Starts the interactive prompt, continuously reading and processing

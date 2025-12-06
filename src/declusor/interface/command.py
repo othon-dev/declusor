@@ -14,7 +14,7 @@ class ICommand(ABC):
     """
 
     @abstractmethod
-    async def execute(self, session: "ISession", console: "IConsole", /) -> None:
+    def execute(self, session: "ISession", console: "IConsole", /) -> None:
         """Execute the command in the given session.
 
         Args:

@@ -11,32 +11,38 @@ class PromptCLI(interface.IPrompt):
         self._session = session
         self._console = console
 
-    async def read_command(self) -> str:
-        """Read command from user input."""
-
-        while not (command := await self._console.read_stripped_line(self._prompt)):
-            continue
-
-        return command
-
-    async def handle_route(self, command: str) -> None:
-        """Handle routing based on user command."""
-
-        match command.split(" ", 1):
-            case [route, argument]:
-                await self._router.locate(route)(self._session, self._console, argument.strip())
-            case [route]:
-                await self._router.locate(route)(self._session, self._console, "")
-            case _:
-                self._console.write_error_message(command)
-
-    async def run(self) -> None:
+    def run(self) -> None:
         """Run the CLI prompt loop."""
 
         while True:
             try:
-                await self.handle_route(await self.read_command())
-            except (config.ExitRequest, KeyboardInterrupt):
+                command_line = self._read_command()
+            except KeyboardInterrupt:
                 break
+
+            try:
+                self._route_command(command_line)
+            except config.ExitRequest:
+                break
+            except KeyboardInterrupt:
+                continue
             except config.DeclusorException as e:
-                self._console.write_error_message(str(e))
+                self._console.write_error_message(e)
+
+    def _read_command(self) -> str:
+        """Read command from user input."""
+
+        while True:
+            if command_line := self._console.read_stripped_line(self._prompt):
+                return command_line
+
+    def _route_command(self, command_line: str) -> None:
+        """Get controler route based on user command."""
+
+        match command_line.split(" ", 1):
+            case [route, argument]:
+                self._router.locate(route)(self._session, self._console, argument.strip())
+            case [route]:
+                self._router.locate(route)(self._session, self._console, "")
+            case _:
+                raise config.PromptError(f"Invalid command: {command_line}")

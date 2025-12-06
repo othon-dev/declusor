@@ -61,7 +61,7 @@ def test_create_help_controller_returns_async_function(mock_get_documentation: C
 
 
 @pytest.mark.asyncio
-async def test_call_help_no_args_displays_all_commands(
+def test_call_help_no_args_displays_all_commands(
     mock_session: AsyncMock, mock_console: MagicMock, mock_get_documentation: Callable[[], str], mock_get_route_usage: Callable[[str], str]
 ) -> None:
     """
@@ -72,7 +72,7 @@ async def test_call_help_no_args_displays_all_commands(
 
 
 @pytest.mark.asyncio
-async def test_call_help_no_args_writes_to_console(
+def test_call_help_no_args_writes_to_console(
     mock_session: AsyncMock, mock_console: MagicMock, mock_get_documentation: Callable[[], str], mock_get_route_usage: Callable[[str], str]
 ) -> None:
     """
@@ -88,7 +88,7 @@ async def test_call_help_no_args_writes_to_console(
 
 
 @pytest.mark.asyncio
-async def test_call_help_with_command_displays_specific_help(
+def test_call_help_with_command_displays_specific_help(
     mock_session: AsyncMock, mock_console: MagicMock, mock_get_documentation: Callable[[], str], mock_get_route_usage: Callable[[str], str]
 ) -> None:
     """
@@ -99,7 +99,7 @@ async def test_call_help_with_command_displays_specific_help(
 
 
 @pytest.mark.asyncio
-async def test_call_help_with_command_uses_get_route_usage(
+def test_call_help_with_command_uses_get_route_usage(
     mock_session: AsyncMock, mock_console: MagicMock, mock_get_documentation: Callable[[], str], mock_get_route_usage: Callable[[str], str]
 ) -> None:
     """
@@ -110,7 +110,7 @@ async def test_call_help_with_command_uses_get_route_usage(
 
 
 @pytest.mark.asyncio
-async def test_call_help_with_command_writes_usage_to_console(
+def test_call_help_with_command_writes_usage_to_console(
     mock_session: AsyncMock, mock_console: MagicMock, mock_get_documentation: Callable[[], str], mock_get_route_usage: Callable[[str], str]
 ) -> None:
     """
@@ -126,7 +126,7 @@ async def test_call_help_with_command_writes_usage_to_console(
 
 
 @pytest.mark.asyncio
-async def test_call_help_parses_optional_command_arg(
+def test_call_help_parses_optional_command_arg(
     mock_session: AsyncMock, mock_console: MagicMock, mock_get_documentation: Callable[[], str], mock_get_route_usage: Callable[[str], str]
 ) -> None:
     """
@@ -137,7 +137,7 @@ async def test_call_help_parses_optional_command_arg(
 
 
 @pytest.mark.asyncio
-async def test_call_help_parses_provided_command_arg(
+def test_call_help_parses_provided_command_arg(
     mock_session: AsyncMock, mock_console: MagicMock, mock_get_documentation: Callable[[], str], mock_get_route_usage: Callable[[str], str]
 ) -> None:
     """
@@ -153,7 +153,7 @@ async def test_call_help_parses_provided_command_arg(
 
 
 @pytest.mark.asyncio
-async def test_call_help_uses_injected_documentation_provider(mock_session: AsyncMock, mock_console: MagicMock) -> None:
+def test_call_help_uses_injected_documentation_provider(mock_session: AsyncMock, mock_console: MagicMock) -> None:
     """
     Given: create_help_controller is called with specific providers
     When: The returned controller is executed
@@ -162,7 +162,7 @@ async def test_call_help_uses_injected_documentation_provider(mock_session: Asyn
 
 
 @pytest.mark.asyncio
-async def test_call_help_uses_injected_route_usage_provider(mock_session: AsyncMock, mock_console: MagicMock) -> None:
+def test_call_help_uses_injected_route_usage_provider(mock_session: AsyncMock, mock_console: MagicMock) -> None:
     """
     Given: create_help_controller is called with specific providers
     When: The returned controller is executed with a command

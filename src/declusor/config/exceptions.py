@@ -18,6 +18,7 @@ class DeclusorWarning(Warning):
         Args:
             description: Human-readable description of the warning.
         """
+
         self.description = description
 
         super().__init__(self.description)
@@ -39,6 +40,14 @@ class InvalidOperation(DeclusorException):
         self.description = description
 
         super().__init__(f"invalid operation: {self.description}")
+
+
+class SessionError(DeclusorException):
+    """Raised when a session operation fails.
+
+    This exception indicates that a network session encountered an error
+    during initialization, reading, writing, or other session operations.
+    """
 
 
 class ParserError(DeclusorException):
@@ -63,6 +72,7 @@ class RouterError(DeclusorException):
             route: The route that caused the error.
             description: Optional detailed explanation of the error.
         """
+
         self.route = route
         self.description = description
 
@@ -102,6 +112,7 @@ class ControllerError(DeclusorException):
         Args:
             description: Detailed explanation of the controller error.
         """
+
         self.description = description
 
         super().__init__(f"controller error: {self.description}")

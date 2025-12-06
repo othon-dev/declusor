@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import AsyncGenerator
+from typing import Generator
 
 
 class ISession(ABC):
@@ -9,8 +9,20 @@ class ISession(ABC):
     transmission and timeout configuration.
     """
 
+    @property
     @abstractmethod
-    def set_timeout(self, value: float, /) -> None:
+    def timeout(self) -> float | None:
+        """Timeout for socket operations.
+
+        Returns:
+            Float value representing the timeout in seconds, or None if no timeout is set.
+        """
+
+        raise NotImplementedError
+
+    @timeout.setter
+    @abstractmethod
+    def timeout(self, value: float | None, /) -> None:
         """Set the session timeout.
 
         Args:
@@ -20,21 +32,27 @@ class ISession(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def read(self) -> AsyncGenerator[bytes, None]:
+    def read(self) -> Generator[bytes, None, None]:
         """Read data from the session.
 
         Returns:
-            Async generator yielding bytes received from the session.
+            Generator yielding bytes received from the session.
         """
 
         raise NotImplementedError
 
     @abstractmethod
-    async def write(self, content: bytes, /) -> None:
+    def write(self, content: bytes, /) -> None:
         """Write data to the session.
 
         Args:
             content: Binary data to send to the session.
         """
+
+        raise NotImplementedError
+
+    @abstractmethod
+    def close(self) -> None:
+        """Close the session stream."""
 
         raise NotImplementedError

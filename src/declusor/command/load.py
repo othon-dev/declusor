@@ -7,8 +7,7 @@ class LoadPayload(interface.ICommand):
     """Command to load a payload file onto the target."""
 
     def __init__(self, filepath: str | Path) -> None:
-        """
-        Initialize the LoadPayload command.
+        """Initialize the LoadPayload command.
 
         Args:
             filepath: Path to the payload file.
@@ -16,9 +15,8 @@ class LoadPayload(interface.ICommand):
 
         self._filepath = util.ensure_file_exists(filepath)
 
-    async def execute(self, session: interface.ISession, console: interface.IConsole, /) -> None:
-        """
-        Execute the load payload command.
+    def execute(self, session: interface.ISession, console: interface.IConsole, /) -> None:
+        """Execute the load payload command.
 
         Args:
             session: The active session.
@@ -30,4 +28,4 @@ class LoadPayload(interface.ICommand):
         if (file_content := util.try_load_file(self._filepath)) is None:
             raise config.InvalidOperation(f"failed to load file content: {self._filepath!r}")
 
-        await session.write(file_content)
+        session.write(file_content)

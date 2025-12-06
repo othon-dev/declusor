@@ -1,13 +1,13 @@
 from declusor import command, interface, util
 
 
-async def call_load(session: interface.ISession, console: interface.IConsole, line: str) -> None:
+def call_load(session: interface.ISession, console: interface.IConsole, line: str) -> None:
     """Load a payload file from your local system and execute it on the remote system"""
 
     arguments, _ = util.parse_command_arguments(line, {"filepath": str})
     filepath = util.ensure_file_exists(arguments["filepath"])
 
-    await command.LoadPayload(filepath).execute(session, console)
+    command.LoadPayload(filepath).execute(session, console)
 
-    async for data in session.read():
+    for data in session.read():
         console.write_binary_data(data)

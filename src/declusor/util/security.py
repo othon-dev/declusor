@@ -3,8 +3,7 @@ from typing import Iterable
 
 
 def validate_file_extension(file: str | Path, allowed_extensions: Iterable[str]) -> bool:
-    """
-    Check if a file extension is in the set of allowed extensions.
+    """Check if a file extension is in the set of allowed extensions.
 
     Args:
         file: The file path or name to check.
@@ -23,8 +22,7 @@ def validate_file_extension(file: str | Path, allowed_extensions: Iterable[str])
 
 
 def validate_file_relative(filepath: str | Path, base_dir: str | Path) -> bool:
-    """
-    Check if a file path is relative to a given base directory.
+    """Check if a file path is relative to a given base directory.
 
     Args:
         filepath: The file path to check.

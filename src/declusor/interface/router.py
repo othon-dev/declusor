@@ -1,11 +1,11 @@
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Awaitable, Callable
+from typing import TYPE_CHECKING, Callable
 
 if TYPE_CHECKING:
     from declusor.interface.console import IConsole
     from declusor.interface.session import ISession
 
-Controller = Callable[["ISession", "IConsole", str], Awaitable[None]]
+Controller = Callable[["ISession", "IConsole", str], None]
 
 
 class IRouter(ABC):

@@ -18,7 +18,6 @@ This package implements the Application Layer of the system, providing:
 2. **Dependency Injection**: Controllers depend on abstractions (interfaces), not concrete implementations.
 3. **Consistent Signatures**: Controller functions follow the `MetaController` type signature.
 4. **Error Propagation**: Controllers allow domain exceptions to propagate for centralized handling.
-5. **Asynchronous Execution**: All controllers are asynchronous to support non-blocking I/O operations.
 
 ## Expected Behavior
 

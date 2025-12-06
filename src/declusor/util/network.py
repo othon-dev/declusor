@@ -5,8 +5,7 @@ from typing import Generator, Type
 
 @contextmanager
 def await_connection(host: str, port: int) -> Generator[socket.socket, None, None]:
-    """
-    Context manager that listens for incoming connections on a specified host and port.
+    """Context manager that listens for incoming connections on a specified host and port.
 
     Args:
         host: The hostname or IP address to bind to.
@@ -31,9 +30,8 @@ def await_connection(host: str, port: int) -> Generator[socket.socket, None, Non
             _handle_socket_exception(e)
 
 
-def _handle_socket_exception(err: Exception) -> None:
-    """
-    Handle socket-related exceptions and provide user-friendly error messages.
+def _handle_socket_exception(e: Exception) -> None:
+    """Handle socket-related exceptions and provide user-friendly error messages.
 
     Args:
         err: The exception that was raised.
@@ -50,7 +48,7 @@ def _handle_socket_exception(err: Exception) -> None:
     }
 
     for exception_type, exception_message in exception_message_table.items():
-        if isinstance(err, exception_type):
+        if isinstance(e, exception_type):
             raise SystemExit(exception_message)
 
-    raise err from err
+    raise e from e

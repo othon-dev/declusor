@@ -1,4 +1,3 @@
-import asyncio
 import sys
 from abc import ABC, abstractmethod
 from pathlib import Path
@@ -6,7 +5,7 @@ from typing import Sequence
 
 
 class IConsole(ABC):
-    """Abstract base class defining the console interface for asynchronous input reading."""
+    """Abstract base class defining the console interface for input reading."""
 
     @abstractmethod
     def setup_completer(self, commands: Sequence[str], /) -> None:
@@ -28,22 +27,24 @@ class IConsole(ABC):
 
         raise NotImplementedError
 
-    async def read_line(self, prompt: str = "", /) -> str:
-        """
-        Read a line from standard input asynchronously using a thread executor.
+    def read_line(self, prompt: str = "", /) -> str:
+        """Read a line from standard input with readline support.
 
         Args:
             prompt: The prompt to display to the user.
 
         Returns:
             The input string.
+
+        Note:
+            Uses input() to preserve readline functionality (autocomplete, history).
+            This is a blocking call.
         """
 
-        return await asyncio.to_thread(input, prompt)
+        return input(prompt)
 
-    async def read_stripped_line(self, prompt: str = "", /) -> str:
-        """
-        Read a line from standard input asynchronously and strip whitespace.
+    def read_stripped_line(self, prompt: str = "", /) -> str:
+        """Read a line from standard input and strip whitespace.
 
         Args:
             prompt: The prompt to display to the user.
@@ -52,7 +53,7 @@ class IConsole(ABC):
             The stripped input string.
         """
 
-        return (await self.read_line(prompt)).strip()
+        return self.read_line(prompt).strip()
 
     def write_message(self, message: str, /) -> None:
         """

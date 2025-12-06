@@ -1,13 +1,13 @@
 from declusor import command, interface, util
 
 
-async def call_upload(session: interface.ISession, console: interface.IConsole, line: str) -> None:
+def call_upload(session: interface.ISession, console: interface.IConsole, line: str) -> None:
     """Upload a file from the local system to the remote system."""
 
     arguments, _ = util.parse_command_arguments(line, {"filepath": str})
     filepath = util.ensure_file_exists(arguments["filepath"])
 
-    await command.UploadFile(filepath).execute(session, console)
+    command.UploadFile(filepath).execute(session, console)
 
-    async for data in session.read():
+    for data in session.read():
         console.write_binary_data(data)

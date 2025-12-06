@@ -5,9 +5,18 @@ from declusor import config
 from declusor.util import encoding
 
 
-def format_client_script(client_name: str, /, **kwargs: str | int) -> str:
+def hash_client_acknowledge(client_ack: bytes = config.Settings.ACK_CLIENT_VALUE) -> bytes:
+    """Format the client acknowledgement value as a hexadecimal MD5 hash.
+
+    Returns:
+        str: The hexadecimal MD5 hash of the client acknowledgement value.
     """
-    Read a client script from the default clients directory, substitute variables, and format it for use.
+
+    return encoding.hash_md5(client_ack)
+
+
+def format_client_script(client_name: str, /, client_ack: bytes = config.Settings.ACK_CLIENT_VALUE, **kwargs: str | int) -> str:
+    """Read a client script from the default clients directory, substitute variables, and format it for use.
 
     Args:
         client_name: The name of the client script file to read.
@@ -22,16 +31,16 @@ def format_client_script(client_name: str, /, **kwargs: str | int) -> str:
     with open(client_filepath, "r", encoding="utf-8") as f:
         client_script = f.read()
 
-    kwargs[config.Settings.ACK_CLIENT_PLACEHOLDER] = encoding.convert_bytes_to_hex(config.Settings.ACK_CLIENT_VALUE)
+    client_ack_digest = hash_client_acknowledge(client_ack)
+    client_ack_hexdigest = encoding.convert_bytes_to_hex(client_ack_digest)
 
-    client_template = Template(client_script)
+    kwargs[config.Settings.ACK_CLIENT_PLACEHOLDER] = client_ack_hexdigest
 
-    return client_template.safe_substitute(**kwargs)
+    return Template(client_script).safe_substitute(**kwargs)
 
 
 def format_function_call(language: config.Language, /, function_name: config.FileFunc, *args: str) -> str:
-    """
-    Format a function call with properly escaped arguments.
+    """Format a function call with properly escaped arguments.
 
     Args:
         language: The programming language of the function (e.g., 'bash', 'sh').
@@ -53,8 +62,7 @@ def format_function_call(language: config.Language, /, function_name: config.Fil
 
 
 def _format_bash_function_call(function_name: str, /, *args: str) -> str:
-    """
-    Format a Bash function call with properly escaped arguments.
+    """Format a Bash function call with properly escaped arguments.
 
     Args:
         function_name: The name of the Bash function.

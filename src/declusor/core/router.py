@@ -47,6 +47,9 @@ class Router(interface.IRouter):
     def documentation(self) -> str:
         """Returns the documentation of all registered routes."""
 
+        if not self.route_table:
+            return ""
+
         key_length = max(map(len, self.route_table.keys())) + 1
 
         documentation = ""

@@ -9,7 +9,7 @@ from declusor import interface
 
 
 class Console(interface.IConsole):
-    """A robust and modular console handler for asynchronous input reading."""
+    """A modular console handler for input reading."""
 
     def __init__(self) -> None:
         self._history_file: Optional[Path] = None

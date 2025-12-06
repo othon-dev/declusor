@@ -17,13 +17,13 @@ def create_help_controller(get_documentation: DocumentationProvider, get_route_u
         Help controller function.
     """
 
-    async def call_help(session: interface.ISession, console: interface.IConsole, line: str) -> None:
+    def call_help(session: interface.ISession, console: interface.IConsole, line: str) -> None:
         """Display detailed information about available commands or a specific command."""
 
         arguments, _ = util.parse_command_arguments(line, {"command": Optional[str]})
 
         if help_command := arguments["command"]:
-            console.write_message(get_route_usage(help_command))
+            console.write_message(f"{help_command}: {get_route_usage(help_command)}")
         else:
             console.write_message(get_documentation())
 

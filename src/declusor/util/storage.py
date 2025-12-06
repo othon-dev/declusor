@@ -85,7 +85,7 @@ def load_library() -> bytes:
         if module_content := try_load_file(file):
             modules.append(module_content)
 
-    return b"\n\n".join(modules)
+    return b"\n".join(modules)
 
 
 def ensure_file_exists(filepath: str | Path, /) -> Path:
@@ -104,10 +104,10 @@ def ensure_file_exists(filepath: str | Path, /) -> Path:
     filepath = Path(filepath).resolve()
 
     if not filepath.exists():
-        raise config.InvalidOperation(f"file {filepath!r} does not exist")
+        raise config.InvalidOperation(f"file {filepath.name!r} does not exist")
 
     if not filepath.is_file():
-        raise config.InvalidOperation(f"{filepath!r} is not a file")
+        raise config.InvalidOperation(f"{filepath.name!r} is not a file")
 
     return filepath
 
@@ -128,9 +128,9 @@ def ensure_directory_exists(dirpath: str | Path, /) -> Path:
     dirpath = Path(dirpath).resolve()
 
     if not dirpath.exists():
-        raise config.InvalidOperation(f"directory {dirpath!r} does not exist")
+        raise config.InvalidOperation(f"directory {dirpath.name!r} does not exist")
 
     if not dirpath.is_dir():
-        raise config.InvalidOperation(f"{dirpath!r} is not a directory")
+        raise config.InvalidOperation(f"{dirpath.name!r} is not a directory")
 
     return dirpath
