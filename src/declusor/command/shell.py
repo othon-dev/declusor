@@ -1,7 +1,7 @@
 import asyncio
 from asyncio import Event
 
-from declusor import core, interface
+from declusor import interface
 
 
 class LaunchShell(interface.ICommand):
@@ -12,7 +12,7 @@ class LaunchShell(interface.ICommand):
 
         self._stop_event = Event()
 
-    async def execute(self, session: interface.ISession, /) -> None:
+    async def execute(self, session: interface.ISession, console: interface.IConsole, /) -> None:
         """
         Execute the interactive shell session.
 
@@ -20,8 +20,8 @@ class LaunchShell(interface.ICommand):
             session: The active session.
         """
 
-        input_task = asyncio.create_task(self._handle_command_request(session))
-        output_task = asyncio.create_task(self._handle_command_response(session))
+        input_task = asyncio.create_task(self._handle_command_request(session, console))
+        output_task = asyncio.create_task(self._handle_command_response(session, console))
 
         try:
             await asyncio.wait([input_task, output_task], return_when=asyncio.FIRST_COMPLETED)
@@ -43,7 +43,7 @@ class LaunchShell(interface.ICommand):
             except asyncio.CancelledError:
                 pass
 
-    async def _handle_command_request(self, session: interface.ISession) -> None:
+    async def _handle_command_request(self, session: interface.ISession, console: interface.IConsole, /) -> None:
         """
         Handle reading commands from user input and sending them to the session.
 
@@ -53,14 +53,14 @@ class LaunchShell(interface.ICommand):
 
         while not self._stop_event.is_set():
             try:
-                command_request = await core.console.read_stripped_line()
+                command_request = await console.read_stripped_line()
 
                 if command_request.strip():
                     await session.write(command_request.strip().encode())
             except EOFError:
                 break
 
-    async def _handle_command_response(self, session: interface.ISession) -> None:
+    async def _handle_command_response(self, session: interface.ISession, console: interface.IConsole, /) -> None:
         """
         Handle reading responses from the session and displaying them to the user.
 
@@ -75,6 +75,6 @@ class LaunchShell(interface.ICommand):
                         break
 
                     if data:
-                        core.console.write_binary_data(data)
+                        console.write_binary_data(data)
         finally:
             self._stop_event.set()

@@ -1,14 +1,13 @@
 from declusor import config, interface, util
 
 
-class DeclusorParser(util.Parser):
+class DeclusorParser(util.Parser, interface.IParser[config.DeclusorOptions]):
     """Parser for command-line arguments."""
 
     info = {
         "host": "IP address or hostname where the service should run",
         "port": "port number to listen on for incoming connections",
         "client": "agent responsible for handling requests",
-        # "listen": "start the service to listen for incoming connections",
     }
 
     def __init__(self, prog: str, description: str, version: str) -> None:
@@ -16,7 +15,7 @@ class DeclusorParser(util.Parser):
 
         self._version = version
 
-    def parse(self) -> interface.DeclusorArguments:
+    def parse(self) -> config.DeclusorOptions:
         """Parse command-line arguments."""
 
         self.add_argument("host", help=self.info["host"], type=str)
@@ -26,6 +25,6 @@ class DeclusorParser(util.Parser):
         args = self.parse_args()
 
         try:
-            return interface.DeclusorArguments(host=args.host, port=args.port, client=args.client)
+            return config.DeclusorOptions(host=args.host, port=args.port, client=args.client)
         except AttributeError as e:
             raise config.ParserError(f"Missing argument: {e.name}") from e

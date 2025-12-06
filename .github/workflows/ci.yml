@@ -67,4 +67,4 @@ jobs:
 
       # Run tests
       - name: Run tests (pytest)
-        run: poetry run pytest
+        run: poetry run python3 -m pytest
