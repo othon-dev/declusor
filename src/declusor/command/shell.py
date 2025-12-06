@@ -27,11 +27,9 @@ class LaunchShell(interface.ICommand):
 
             self._task_pool.wait_all()
         except KeyboardInterrupt:
-            console.write_message("Keyboard interrupt received.")
+            console.write_message("[keyboard interrupt received]")
         finally:
             self._task_pool.stop()
-
-            console.write_message("Exiting shell...")
 
     def _create_request_handler(self, session: interface.ISession, console: interface.IConsole, /) -> util.TaskHandler:
         """Handle reading commands from user input and sending them to the session."""
