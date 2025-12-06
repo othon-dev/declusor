@@ -48,8 +48,7 @@ class Parser(ArgumentParser):
 
 
 def parse_command_arguments(line: str, definitions: ArgumentDefinitions, allow_unknown: bool = False) -> tuple[ParsedArguments, list[str]]:
-    """
-    Parses command arguments from a string based on provided definitions.
+    """Parses command arguments from a string based on provided definitions.
 
     Args:
         line: The command line string to parse.
@@ -81,7 +80,9 @@ def parse_command_arguments(line: str, definitions: ArgumentDefinitions, allow_u
             if type(None) in origin_types:
                 is_optional = True
 
-                if actual_types := [a for a in origin_types if a is not type(None)]:
+                actual_types: list[Type[Any]] = [a for a in origin_types if a is not type(None)]
+
+                if actual_types:
                     arg_type = actual_types[0]
 
         if arg_type not in supported_types:

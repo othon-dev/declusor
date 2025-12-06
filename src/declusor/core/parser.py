@@ -10,11 +10,6 @@ class DeclusorParser(util.Parser, interface.IParser[config.DeclusorOptions]):
         "client": "agent responsible for handling requests",
     }
 
-    def __init__(self, prog: str, description: str, version: str) -> None:
-        super().__init__(prog=prog, description=description)
-
-        self._version = version
-
     def parse(self) -> config.DeclusorOptions:
         """Parse command-line arguments."""
 
