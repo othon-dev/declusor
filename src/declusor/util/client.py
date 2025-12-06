@@ -5,9 +5,18 @@ from declusor import config
 from declusor.util import encoding
 
 
-def format_client_script(client_name: str, /, **kwargs: str | int) -> str:
+def hash_client_acknowledge(client_ack: bytes = config.Settings.ACK_CLIENT_VALUE) -> bytes:
+    """Format the client acknowledgement value as a hexadecimal MD5 hash.
+
+    Returns:
+        str: The hexadecimal MD5 hash of the client acknowledgement value.
     """
-    Read a client script from the default clients directory, substitute variables, and format it for use.
+
+    return encoding.hash_md5(client_ack)
+
+
+def format_client_script(client_name: str, /, client_ack: bytes = config.Settings.ACK_CLIENT_VALUE, **kwargs: str | int) -> str:
+    """Read a client script from the default clients directory, substitute variables, and format it for use.
 
     Args:
         client_name: The name of the client script file to read.

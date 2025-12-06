@@ -1,0 +1,107 @@
+from dataclasses import dataclass
+from threading import Event, Thread
+from typing import Any, Callable, Generator, Iterator, Literal, Self
+
+TaskHandler = Callable[["TaskEvent"], Any]
+
+
+class TaskEvent(Event):
+    """A threading event specialized for task management."""
+
+
+@dataclass
+class Task:
+    """A structure representing the result of a task execution."""
+
+    result: Any | None = None
+    exception: Exception | None = None
+
+
+class TaskPool:
+    """A cooperative thread manager that."""
+
+    def __init__(self, stop_event: TaskEvent | None = None, max_size: int = 10, daemon_mode: bool = True):
+        self._daemon_mode = daemon_mode
+        self._max_size = max_size
+        self._stop_event = stop_event or TaskEvent()
+
+        self._threads: dict[Thread, Task] = {}
+        self._results: list[Task] = []
+
+    @property
+    def errors(self) -> list[Exception]:
+        """Return exceptions from all completed tasks."""
+
+        return [r.exception for r in self._results if r.exception is not None]
+
+    def add_task(self, handle_task: TaskHandler, /, name: str | None = None) -> None:
+        """Register a task without starting it."""
+
+        if len(self._threads) >= self._max_size:
+            raise RuntimeError("Maximum number of threads reached")
+
+        thread_task = Task()
+        thread = Thread(target=self._run_task, args=(handle_task, thread_task), daemon=self._daemon_mode, name=name)
+
+        self._threads[thread] = thread_task
+
+    def start_all(self) -> None:
+        """Start all registered threads."""
+
+        self._stop_event.clear()
+
+        for thread in self._threads:
+            if not thread.is_alive():
+                thread.start()
+
+    def wait_all(self) -> None:
+        """Wait until all threads have finished execution."""
+
+        for thread in list(self._threads):
+            thread.join()
+
+    def stop(self) -> None:
+        """Signal all threads to stop (cooperative cancellation)."""
+
+        self._stop_event.set()
+
+    def return_all(self, timeout: float = 5.0, /) -> Generator[Task, None, None]:
+        """Stop all threads, join them, and return their results. Produces results one-by-one without losing them."""
+
+        self._stop_event.set()
+
+        for thread, task in tuple(self._threads.items()):
+            thread.join(timeout=timeout)
+
+            if thread.is_alive():
+                task.exception = TimeoutError(f"Thread {thread.name or thread.native_id!r} did not exit in time")
+
+            self._threads.pop(thread)
+            yield task
+
+            self._results.append(task)
+
+    def _run_task(self, handle_task: TaskHandler, /, thread_result: Task) -> None:
+        try:
+            thread_result.result = handle_task(self._stop_event)
+        except Exception as e:
+            thread_result.exception = e
+
+    def __enter__(self) -> Self:
+        self.start_all()
+
+        return self
+
+    def __exit__(self, exc_t: type[BaseException] | None, exc_v: BaseException | None, exc_tb: Exception | None) -> Literal[False]:
+        for _ in self.return_all():
+            pass
+
+        if errors := self.errors:
+            raise ExceptionGroup("One or more exceptions occurred during thread execution.", errors) from exc_tb
+
+        return False
+
+    def __iter__(self) -> Iterator[Task]:
+        """Iterate over remaining tasks."""
+
+        return iter(tuple(self._threads.values()))
