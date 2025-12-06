@@ -34,7 +34,7 @@ def mock_console(monkeypatch: pytest.MonkeyPatch) -> MagicMock:
 
 
 @pytest.mark.asyncio
-async def test_call_command_parses_command_argument(mock_session: AsyncMock, mock_router: MagicMock) -> None:
+def test_call_command_parses_command_argument(mock_session: AsyncMock, mock_router: MagicMock) -> None:
     """
     Given: call_command with line="ls -la"
     When: Controller parses arguments
@@ -43,7 +43,7 @@ async def test_call_command_parses_command_argument(mock_session: AsyncMock, moc
 
 
 @pytest.mark.asyncio
-async def test_call_command_parses_quoted_command(mock_session: AsyncMock, mock_router: MagicMock) -> None:
+def test_call_command_parses_quoted_command(mock_session: AsyncMock, mock_router: MagicMock) -> None:
     """
     Given: call_command with line='"echo hello world"'
     When: Controller parses arguments
@@ -52,7 +52,7 @@ async def test_call_command_parses_quoted_command(mock_session: AsyncMock, mock_
 
 
 @pytest.mark.asyncio
-async def test_call_command_missing_argument_raises(mock_session: AsyncMock, mock_router: MagicMock) -> None:
+def test_call_command_missing_argument_raises(mock_session: AsyncMock, mock_router: MagicMock) -> None:
     """
     Given: call_command with empty line ""
     When: Controller parses arguments
@@ -66,7 +66,7 @@ async def test_call_command_missing_argument_raises(mock_session: AsyncMock, moc
 
 
 @pytest.mark.asyncio
-async def test_call_command_creates_execute_command(mock_session: AsyncMock, mock_router: MagicMock) -> None:
+def test_call_command_creates_execute_command(mock_session: AsyncMock, mock_router: MagicMock) -> None:
     """
     Given: call_command with valid command
     When: Controller executes
@@ -75,7 +75,7 @@ async def test_call_command_creates_execute_command(mock_session: AsyncMock, moc
 
 
 @pytest.mark.asyncio
-async def test_call_command_executes_on_session(mock_session: AsyncMock, mock_router: MagicMock) -> None:
+def test_call_command_executes_on_session(mock_session: AsyncMock, mock_router: MagicMock) -> None:
     """
     Given: call_command with command "whoami"
     When: Controller executes
@@ -89,7 +89,7 @@ async def test_call_command_executes_on_session(mock_session: AsyncMock, mock_ro
 
 
 @pytest.mark.asyncio
-async def test_call_command_reads_response(mock_session: AsyncMock, mock_router: MagicMock) -> None:
+def test_call_command_reads_response(mock_session: AsyncMock, mock_router: MagicMock) -> None:
     """
     Given: Session returns response data
     When: call_command completes execution
@@ -98,7 +98,7 @@ async def test_call_command_reads_response(mock_session: AsyncMock, mock_router:
 
 
 @pytest.mark.asyncio
-async def test_call_command_writes_response_to_console(mock_session: AsyncMock, mock_router: MagicMock, mock_console: MagicMock) -> None:
+def test_call_command_writes_response_to_console(mock_session: AsyncMock, mock_router: MagicMock, mock_console: MagicMock) -> None:
     """
     Given: Session read yields b"response data"
     When: call_command processes response
@@ -107,7 +107,7 @@ async def test_call_command_writes_response_to_console(mock_session: AsyncMock, 
 
 
 @pytest.mark.asyncio
-async def test_call_command_handles_empty_response(mock_session: AsyncMock, mock_router: MagicMock, mock_console: MagicMock) -> None:
+def test_call_command_handles_empty_response(mock_session: AsyncMock, mock_router: MagicMock, mock_console: MagicMock) -> None:
     """
     Given: Session read yields no data
     When: call_command processes response
@@ -116,7 +116,7 @@ async def test_call_command_handles_empty_response(mock_session: AsyncMock, mock
 
 
 @pytest.mark.asyncio
-async def test_call_command_handles_multipart_response(mock_session: AsyncMock, mock_router: MagicMock, mock_console: MagicMock) -> None:
+def test_call_command_handles_multipart_response(mock_session: AsyncMock, mock_router: MagicMock, mock_console: MagicMock) -> None:
     """
     Given: Session read yields multiple chunks
     When: call_command processes response

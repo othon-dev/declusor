@@ -7,7 +7,7 @@ This module tests the command router including:
 - documentation: Generate help text for all routes
 """
 
-from unittest.mock import AsyncMock
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -22,8 +22,8 @@ def router():
 
 
 @pytest.fixture
-def sample_controller() -> AsyncMock:
-    """Create a sample async controller function with docstring."""
+def sample_controller() -> MagicMock:
+    """Create a sample controller function with docstring."""
 
 
 # =============================================================================
@@ -73,7 +73,7 @@ def test_router_routes_preserves_order() -> None:
 # =============================================================================
 
 
-def test_router_connect_registers_route(sample_controller: AsyncMock) -> None:
+def test_router_connect_registers_route(sample_controller: MagicMock) -> None:
     """
     Given: Router with no routes
     When: connect("load", controller) is called
@@ -81,7 +81,7 @@ def test_router_connect_registers_route(sample_controller: AsyncMock) -> None:
     """
 
 
-def test_router_connect_strips_route_name(sample_controller: AsyncMock) -> None:
+def test_router_connect_strips_route_name(sample_controller: MagicMock) -> None:
     """
     Given: connect(" load ", controller) with spaces
     When: Route is registered
@@ -89,7 +89,7 @@ def test_router_connect_strips_route_name(sample_controller: AsyncMock) -> None:
     """
 
 
-def test_router_connect_duplicate_raises(sample_controller: AsyncMock) -> None:
+def test_router_connect_duplicate_raises(sample_controller: MagicMock) -> None:
     """
     Given: Route "exit" already registered
     When: connect("exit", another_controller) is called
@@ -97,7 +97,7 @@ def test_router_connect_duplicate_raises(sample_controller: AsyncMock) -> None:
     """
 
 
-def test_router_connect_multiple_routes(sample_controller: AsyncMock) -> None:
+def test_router_connect_multiple_routes(sample_controller: MagicMock) -> None:
     """
     Given: Empty router
     When: Multiple routes are connected
@@ -110,7 +110,7 @@ def test_router_connect_multiple_routes(sample_controller: AsyncMock) -> None:
 # =============================================================================
 
 
-def test_router_locate_returns_controller(sample_controller: AsyncMock) -> None:
+def test_router_locate_returns_controller(sample_controller: MagicMock) -> None:
     """
     Given: Route "shell" registered with controller
     When: locate("shell") is called
@@ -118,7 +118,7 @@ def test_router_locate_returns_controller(sample_controller: AsyncMock) -> None:
     """
 
 
-def test_router_locate_strips_route_name(sample_controller: AsyncMock) -> None:
+def test_router_locate_strips_route_name(sample_controller: MagicMock) -> None:
     """
     Given: Route "shell" registered
     When: locate(" shell ") is called with spaces
@@ -139,7 +139,7 @@ def test_router_locate_not_found_raises() -> None:
 # =============================================================================
 
 
-def test_router_get_route_usage_returns_docstring(sample_controller: AsyncMock) -> None:
+def test_router_get_route_usage_returns_docstring(sample_controller: MagicMock) -> None:
     """
     Given: Controller with docstring "Execute a command."
     When: get_route_usage("command") is called
@@ -147,7 +147,7 @@ def test_router_get_route_usage_returns_docstring(sample_controller: AsyncMock) 
     """
 
 
-def test_router_get_route_usage_joins_multiline(sample_controller: AsyncMock) -> None:
+def test_router_get_route_usage_joins_multiline(sample_controller: MagicMock) -> None:
     """
     Given: Controller with multi-line docstring
     When: get_route_usage is called
@@ -176,7 +176,7 @@ def test_router_get_route_usage_invalid_route() -> None:
 # =============================================================================
 
 
-def test_router_documentation_lists_all_routes(sample_controller: AsyncMock) -> None:
+def test_router_documentation_lists_all_routes(sample_controller: MagicMock) -> None:
     """
     Given: Routes ["load", "shell", "exit"] registered
     When: documentation property is accessed
@@ -192,7 +192,7 @@ def test_router_documentation_aligns_columns() -> None:
     """
 
 
-def test_router_documentation_includes_descriptions(sample_controller: AsyncMock) -> None:
+def test_router_documentation_includes_descriptions(sample_controller: MagicMock) -> None:
     """
     Given: Controllers with docstrings
     When: documentation is generated

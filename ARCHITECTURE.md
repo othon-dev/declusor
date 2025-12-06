@@ -19,11 +19,6 @@ Declusor is a command-and-control (C2) framework built with clean architecture p
 - Dependencies are injected at runtime, not hardcoded
 - Controllers receive all required dependencies as parameters
 
-### 4. Asynchronous-First Design
-- All I/O operations are asynchronous to prevent blocking
-- Session management, command execution, and user interaction are non-blocking
-- Supports concurrent client connections efficiently
-
 ## Layer Architecture
 
 ```mermaid

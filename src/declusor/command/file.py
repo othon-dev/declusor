@@ -20,20 +20,18 @@ class _BaseFileCommand(interface.ICommand):
         self._filepath = util.ensure_file_exists(filepath)
         self._language = language
 
-    async def execute(self, session: interface.ISession, console: interface.IConsole, /) -> None:
-        """
-        Execute the command on the session.
+    def execute(self, session: interface.ISession, console: interface.IConsole, /) -> None:
+        """Execute the command on the session.
 
         Args:
             session: The active session.
         """
 
-        await session.write(self._command)
+        session.write(self._command)
 
     @property
     def _command(self) -> bytes:
-        """
-        Generate the encoded command bytes to send to the target.
+        """Generate the encoded command bytes to send to the target.
 
         Returns:
             The base64 encoded command string ready for transmission.

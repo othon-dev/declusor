@@ -17,14 +17,13 @@ This package serves as the operational layer of the application, providing:
 2. **Interface Compliance**: All commands implement the `ICommand` interface, ensuring consistent execution patterns.
 3. **Dependency on Abstractions**: Commands depend on `ISession` and `IConsole` interfaces, not concrete implementations.
 4. **Stateless Execution**: Commands receive all necessary state through their constructors and execution parameters.
-5. **Asynchronous Operations**: Commands support asynchronous execution to prevent blocking during network I/O.
 
 ## Expected Behavior
 
 Commands within this package should:
 
 - Accept configuration through constructor parameters
-- Execute their operation via an asynchronous `execute` method
+- Execute their operation via a synchronous `execute` method
 - Interact with sessions solely through the `ISession` interface
 - Handle data encoding and formatting as required by the target protocol
 - Remain agnostic to the origin of their invocation

@@ -14,12 +14,11 @@ class ExecuteCommand(interface.ICommand):
 
         self._command_line = command_line.encode()
 
-    async def execute(self, session: interface.ISession, console: interface.IConsole, /) -> None:
-        """
-        Execute the command on the session.
+    def execute(self, session: interface.ISession, console: interface.IConsole, /) -> None:
+        """Execute the command on the session.
 
         Args:
             session: The active session to execute the command on.
         """
 
-        await session.write(self._command_line)
+        session.write(self._command_line)

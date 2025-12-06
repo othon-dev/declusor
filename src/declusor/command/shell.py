@@ -1,80 +1,64 @@
-import asyncio
-from asyncio import Event
-
-from declusor import interface
+from declusor import interface, util
 
 
 class LaunchShell(interface.ICommand):
     """Command to launch an interactive shell session."""
 
     def __init__(self) -> None:
-        """Initialize the LaunchShell command."""
+        self._stop_event = util.TaskEvent()
+        self._task_pool = util.TaskPool(self._stop_event)
 
-        self._stop_event = Event()
-
-    async def execute(self, session: interface.ISession, console: interface.IConsole, /) -> None:
-        """
-        Execute the interactive shell session.
+    def execute(self, session: interface.ISession, console: interface.IConsole, /) -> None:
+        """Execute the interactive shell session.
 
         Args:
             session: The active session.
+            console: The console interface for user interaction.
         """
 
-        input_task = asyncio.create_task(self._handle_command_request(session, console))
-        output_task = asyncio.create_task(self._handle_command_response(session, console))
+        response_handler = self._create_response_handler(session, console)
+        request_handler = self._create_request_handler(session, console)
+
+        self._task_pool.add_task(response_handler)
+        self._task_pool.start_all()
 
         try:
-            await asyncio.wait([input_task, output_task], return_when=asyncio.FIRST_COMPLETED)
-        except (asyncio.CancelledError, KeyboardInterrupt):
-            pass
+            request_handler(self._stop_event)
+
+            self._task_pool.wait_all()
+        except KeyboardInterrupt:
+            console.write_message("Keyboard interrupt received.")
         finally:
-            self._stop_event.set()
+            self._task_pool.stop()
 
-            input_task.cancel()
-            output_task.cancel()
+            console.write_message("Exiting shell...")
+
+    def _create_request_handler(self, session: interface.ISession, console: interface.IConsole, /) -> util.TaskHandler:
+        """Handle reading commands from user input and sending them to the session."""
+
+        def _handle_request(stop_event: util.TaskEvent) -> None:
+            while not stop_event.is_set():
+                command_request = console.read_line()
+
+                if command_request:
+                    session.write(command_request.encode())
+
+        return _handle_request
+
+    def _create_response_handler(self, session: interface.ISession, console: interface.IConsole, /) -> util.TaskHandler:
+        """Handle reading responses from the session and displaying them to the user."""
+
+        def _handle_response(stop_event: util.TaskEvent) -> None:
+            previous_timeout = session.timeout
 
             try:
-                await input_task
-            except asyncio.CancelledError:
-                pass
+                session.timeout = None
 
-            try:
-                await output_task
-            except asyncio.CancelledError:
-                pass
+                while not stop_event.is_set():
+                    for chunk in session.read():
+                        if chunk:
+                            console.write_binary_data(chunk)
+            finally:
+                session.timeout = previous_timeout
 
-    async def _handle_command_request(self, session: interface.ISession, console: interface.IConsole, /) -> None:
-        """
-        Handle reading commands from user input and sending them to the session.
-
-        Args:
-            session: The active session.
-        """
-
-        while not self._stop_event.is_set():
-            try:
-                command_request = await console.read_stripped_line()
-
-                if command_request.strip():
-                    await session.write(command_request.strip().encode())
-            except EOFError:
-                break
-
-    async def _handle_command_response(self, session: interface.ISession, console: interface.IConsole, /) -> None:
-        """
-        Handle reading responses from the session and displaying them to the user.
-
-        Args:
-            session: The active session.
-        """
-
-        try:
-            while not self._stop_event.is_set():
-                async for data in session.read():
-                    if self._stop_event.is_set():
-                        break
-
-                    if data:
-                        console.write_binary_data(data)
-        finally:
-            self._stop_event.set()
+        return _handle_response

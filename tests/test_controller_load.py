@@ -40,7 +40,7 @@ def temp_payload(tmp_path: Path) -> Path:
 
 
 @pytest.mark.asyncio
-async def test_call_load_parses_filepath_argument(mock_session: AsyncMock, mock_router: MagicMock, temp_payload: Path) -> None:
+def test_call_load_parses_filepath_argument(mock_session: AsyncMock, mock_router: MagicMock, temp_payload: Path) -> None:
     """
     Given: call_load with line=str(temp_payload)
     When: Controller parses arguments
@@ -49,7 +49,7 @@ async def test_call_load_parses_filepath_argument(mock_session: AsyncMock, mock_
 
 
 @pytest.mark.asyncio
-async def test_call_load_missing_filepath_raises(mock_session: AsyncMock, mock_router: MagicMock) -> None:
+def test_call_load_missing_filepath_raises(mock_session: AsyncMock, mock_router: MagicMock) -> None:
     """
     Given: call_load with empty line ""
     When: Controller parses arguments
@@ -58,7 +58,7 @@ async def test_call_load_missing_filepath_raises(mock_session: AsyncMock, mock_r
 
 
 @pytest.mark.asyncio
-async def test_call_load_parses_relative_path(mock_session: AsyncMock, mock_router: MagicMock, temp_payload: Path) -> None:
+def test_call_load_parses_relative_path(mock_session: AsyncMock, mock_router: MagicMock, temp_payload: Path) -> None:
     """
     Given: call_load with relative path "discovery/dev_tools.sh"
     When: Controller parses arguments
@@ -72,7 +72,7 @@ async def test_call_load_parses_relative_path(mock_session: AsyncMock, mock_rout
 
 
 @pytest.mark.asyncio
-async def test_call_load_validates_file_exists(mock_session: AsyncMock, mock_router: MagicMock, temp_payload: Path) -> None:
+def test_call_load_validates_file_exists(mock_session: AsyncMock, mock_router: MagicMock, temp_payload: Path) -> None:
     """
     Given: call_load with valid filepath
     When: Controller validates file
@@ -81,7 +81,7 @@ async def test_call_load_validates_file_exists(mock_session: AsyncMock, mock_rou
 
 
 @pytest.mark.asyncio
-async def test_call_load_nonexistent_file_raises(mock_session: AsyncMock, mock_router: MagicMock) -> None:
+def test_call_load_nonexistent_file_raises(mock_session: AsyncMock, mock_router: MagicMock) -> None:
     """
     Given: call_load with "/nonexistent/payload.sh"
     When: Controller validates file
@@ -95,7 +95,7 @@ async def test_call_load_nonexistent_file_raises(mock_session: AsyncMock, mock_r
 
 
 @pytest.mark.asyncio
-async def test_call_load_creates_load_payload_command(mock_session: AsyncMock, mock_router: MagicMock, temp_payload: Path) -> None:
+def test_call_load_creates_load_payload_command(mock_session: AsyncMock, mock_router: MagicMock, temp_payload: Path) -> None:
     """
     Given: call_load with valid payload
     When: Controller executes
@@ -104,7 +104,7 @@ async def test_call_load_creates_load_payload_command(mock_session: AsyncMock, m
 
 
 @pytest.mark.asyncio
-async def test_call_load_sends_raw_content(mock_session: AsyncMock, mock_router: MagicMock, temp_payload: Path) -> None:
+def test_call_load_sends_raw_content(mock_session: AsyncMock, mock_router: MagicMock, temp_payload: Path) -> None:
     """
     Given: call_load with payload containing "echo test"
     When: Controller executes
@@ -118,7 +118,7 @@ async def test_call_load_sends_raw_content(mock_session: AsyncMock, mock_router:
 
 
 @pytest.mark.asyncio
-async def test_call_load_reads_output(mock_session: AsyncMock, mock_router: MagicMock, temp_payload: Path) -> None:
+def test_call_load_reads_output(mock_session: AsyncMock, mock_router: MagicMock, temp_payload: Path) -> None:
     """
     Given: Payload produces output on target
     When: call_load completes
@@ -127,9 +127,7 @@ async def test_call_load_reads_output(mock_session: AsyncMock, mock_router: Magi
 
 
 @pytest.mark.asyncio
-async def test_call_load_writes_output_to_console(
-    mock_session: AsyncMock, mock_router: MagicMock, mock_console: MagicMock, temp_payload: Path
-) -> None:
+def test_call_load_writes_output_to_console(mock_session: AsyncMock, mock_router: MagicMock, mock_console: MagicMock, temp_payload: Path) -> None:
     """
     Given: Session returns payload output
     When: call_load processes response
@@ -138,9 +136,7 @@ async def test_call_load_writes_output_to_console(
 
 
 @pytest.mark.asyncio
-async def test_call_load_handles_multiline_output(
-    mock_session: AsyncMock, mock_router: MagicMock, mock_console: MagicMock, temp_payload: Path
-) -> None:
+def test_call_load_handles_multiline_output(mock_session: AsyncMock, mock_router: MagicMock, mock_console: MagicMock, temp_payload: Path) -> None:
     """
     Given: Payload produces multi-line output
     When: call_load processes response

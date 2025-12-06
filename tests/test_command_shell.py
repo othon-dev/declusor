@@ -49,7 +49,7 @@ def test_launch_shell_init_creates_stop_event() -> None:
 
 
 @pytest.mark.asyncio
-async def test_launch_shell_execute_creates_both_tasks(mock_session: AsyncMock) -> None:
+def test_launch_shell_execute_creates_both_tasks(mock_session: AsyncMock) -> None:
     """
     Given: LaunchShell.execute is called
     When: Execution starts
@@ -58,7 +58,7 @@ async def test_launch_shell_execute_creates_both_tasks(mock_session: AsyncMock) 
 
 
 @pytest.mark.asyncio
-async def test_launch_shell_execute_cancels_tasks_on_exit(mock_session: AsyncMock) -> None:
+def test_launch_shell_execute_cancels_tasks_on_exit(mock_session: AsyncMock) -> None:
     """
     Given: LaunchShell.execute is running both tasks
     When: Execution ends (for any reason)
@@ -67,7 +67,7 @@ async def test_launch_shell_execute_cancels_tasks_on_exit(mock_session: AsyncMoc
 
 
 @pytest.mark.asyncio
-async def test_launch_shell_execute_sets_stop_event(mock_session: AsyncMock) -> None:
+def test_launch_shell_execute_sets_stop_event(mock_session: AsyncMock) -> None:
     """
     Given: LaunchShell.execute is running
     When: Execution ends
@@ -81,7 +81,7 @@ async def test_launch_shell_execute_sets_stop_event(mock_session: AsyncMock) -> 
 
 
 @pytest.mark.asyncio
-async def test_launch_shell_execute_handles_keyboard_interrupt(mock_session: AsyncMock) -> None:
+def test_launch_shell_execute_handles_keyboard_interrupt(mock_session: AsyncMock) -> None:
     """
     Given: LaunchShell.execute is running
     When: KeyboardInterrupt (Ctrl+C) is raised
@@ -90,7 +90,7 @@ async def test_launch_shell_execute_handles_keyboard_interrupt(mock_session: Asy
 
 
 @pytest.mark.asyncio
-async def test_launch_shell_execute_handles_cancelled_error(mock_session: AsyncMock) -> None:
+def test_launch_shell_execute_handles_cancelled_error(mock_session: AsyncMock) -> None:
     """
     Given: LaunchShell.execute is running
     When: asyncio.CancelledError is raised
@@ -104,7 +104,7 @@ async def test_launch_shell_execute_handles_cancelled_error(mock_session: AsyncM
 
 
 @pytest.mark.asyncio
-async def test_handle_command_request_writes_to_session(mock_session: AsyncMock) -> None:
+def test_handle_command_request_writes_to_session(mock_session: AsyncMock) -> None:
     """
     Given: User enters a non-empty command
     When: _handle_command_request processes input
@@ -113,7 +113,7 @@ async def test_handle_command_request_writes_to_session(mock_session: AsyncMock)
 
 
 @pytest.mark.asyncio
-async def test_handle_command_request_skips_empty_input(mock_session: AsyncMock) -> None:
+def test_handle_command_request_skips_empty_input(mock_session: AsyncMock) -> None:
     """
     Given: User enters empty/whitespace-only input
     When: _handle_command_request processes input
@@ -122,7 +122,7 @@ async def test_handle_command_request_skips_empty_input(mock_session: AsyncMock)
 
 
 @pytest.mark.asyncio
-async def test_handle_command_request_breaks_on_eof_error(mock_session: AsyncMock) -> None:
+def test_handle_command_request_breaks_on_eof_error(mock_session: AsyncMock) -> None:
     """
     Given: console.read_stripped_line() raises EOFError
     When: _handle_command_request processes input
@@ -136,7 +136,7 @@ async def test_handle_command_request_breaks_on_eof_error(mock_session: AsyncMoc
 
 
 @pytest.mark.asyncio
-async def test_handle_command_response_writes_to_console(mock_session: AsyncMock) -> None:
+def test_handle_command_response_writes_to_console(mock_session: AsyncMock) -> None:
     """
     Given: session.read() yields data
     When: _handle_command_response receives data
@@ -145,7 +145,7 @@ async def test_handle_command_response_writes_to_console(mock_session: AsyncMock
 
 
 @pytest.mark.asyncio
-async def test_handle_command_response_skips_empty_data(mock_session: AsyncMock) -> None:
+def test_handle_command_response_skips_empty_data(mock_session: AsyncMock) -> None:
     """
     Given: session.read() yields empty bytes b''
     When: _handle_command_response processes data
@@ -154,9 +154,50 @@ async def test_handle_command_response_skips_empty_data(mock_session: AsyncMock)
 
 
 @pytest.mark.asyncio
-async def test_handle_command_response_respects_stop_event(mock_session: AsyncMock) -> None:
+def test_handle_command_response_respects_stop_event(mock_session: AsyncMock) -> None:
     """
     Given: _stop_event is set during iteration
     When: _handle_command_response checks condition
     Then: Breaks out of loops and exits
+    """
+
+
+# =============================================================================
+# Tests: LaunchShell - Exit behavior (Ctrl+C scenarios)
+# =============================================================================
+
+
+@pytest.mark.asyncio
+def test_launch_shell_execute_does_not_propagate_keyboard_interrupt() -> None:
+    """
+    Given: LaunchShell.execute is running
+    When: KeyboardInterrupt is raised (Ctrl+C in shell)
+    Then: Exception is caught and NOT re-raised (returns to PromptCLI)
+    """
+
+
+@pytest.mark.asyncio
+def test_launch_shell_execute_cancels_tasks_with_timeout() -> None:
+    """
+    Given: LaunchShell.execute is cleaning up tasks
+    When: Tasks are cancelled but blocked on input()
+    Then: Uses asyncio.wait_for with 0.1s timeout to avoid hanging
+    """
+
+
+@pytest.mark.asyncio
+def test_handle_command_request_breaks_on_keyboard_interrupt() -> None:
+    """
+    Given: _handle_command_request is waiting for input
+    When: console.read_stripped_line() raises KeyboardInterrupt
+    Then: Loop breaks immediately (exits input handler)
+    """
+
+
+@pytest.mark.asyncio
+def test_handle_command_request_breaks_on_cancelled_error() -> None:
+    """
+    Given: _handle_command_request is waiting for input
+    When: Task is cancelled (asyncio.CancelledError)
+    Then: Loop breaks immediately (exits input handler)
     """

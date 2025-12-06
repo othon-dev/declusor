@@ -61,7 +61,7 @@ def test_execute_command_init_handles_special_characters() -> None:
 
 
 @pytest.mark.asyncio
-async def test_execute_command_execute_writes_to_session(mock_session: AsyncMock) -> None:
+def test_execute_command_execute_writes_to_session(mock_session: AsyncMock) -> None:
     """
     Given: ExecuteCommand with command "whoami"
     When: execute(session) is called
@@ -70,7 +70,7 @@ async def test_execute_command_execute_writes_to_session(mock_session: AsyncMock
 
 
 @pytest.mark.asyncio
-async def test_execute_command_execute_awaits_write(mock_session: AsyncMock) -> None:
+def test_execute_command_execute_awaits_write(mock_session: AsyncMock) -> None:
     """
     Given: ExecuteCommand instance
     When: execute(session) is called
@@ -79,7 +79,7 @@ async def test_execute_command_execute_awaits_write(mock_session: AsyncMock) -> 
 
 
 @pytest.mark.asyncio
-async def test_execute_command_execute_does_not_read_response(mock_session: AsyncMock) -> None:
+def test_execute_command_execute_does_not_read_response(mock_session: AsyncMock) -> None:
     """
     Given: ExecuteCommand instance
     When: execute(session) is called

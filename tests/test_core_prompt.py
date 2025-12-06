@@ -71,7 +71,7 @@ def test_prompt_cli_init_stores_session() -> None:
 
 
 @pytest.mark.asyncio
-async def test_prompt_cli_read_command_returns_input(mock_console: MagicMock) -> None:
+def test_prompt_cli_read_command_returns_input(mock_console: MagicMock) -> None:
     """
     Given: User enters "load file.sh"
     When: read_command() is called
@@ -80,7 +80,7 @@ async def test_prompt_cli_read_command_returns_input(mock_console: MagicMock) ->
 
 
 @pytest.mark.asyncio
-async def test_prompt_cli_read_command_skips_empty(mock_console: MagicMock) -> None:
+def test_prompt_cli_read_command_skips_empty(mock_console: MagicMock) -> None:
     """
     Given: User enters empty lines then "exit"
     When: read_command() is called
@@ -89,7 +89,7 @@ async def test_prompt_cli_read_command_skips_empty(mock_console: MagicMock) -> N
 
 
 @pytest.mark.asyncio
-async def test_prompt_cli_read_command_uses_prompt(mock_console: MagicMock) -> None:
+def test_prompt_cli_read_command_uses_prompt(mock_console: MagicMock) -> None:
     """
     Given: PromptCLI with name="declusor"
     When: read_command() is called
@@ -103,7 +103,7 @@ async def test_prompt_cli_read_command_uses_prompt(mock_console: MagicMock) -> N
 
 
 @pytest.mark.asyncio
-async def test_prompt_cli_handle_route_with_argument(mock_router: MagicMock) -> None:
+def test_prompt_cli_handle_route_with_argument(mock_router: MagicMock) -> None:
     """
     Given: command="load myfile.sh"
     When: handle_route() is called
@@ -112,7 +112,7 @@ async def test_prompt_cli_handle_route_with_argument(mock_router: MagicMock) -> 
 
 
 @pytest.mark.asyncio
-async def test_prompt_cli_handle_route_without_argument(mock_router: MagicMock) -> None:
+def test_prompt_cli_handle_route_without_argument(mock_router: MagicMock) -> None:
     """
     Given: command="exit" (no argument)
     When: handle_route() is called
@@ -121,7 +121,7 @@ async def test_prompt_cli_handle_route_without_argument(mock_router: MagicMock) 
 
 
 @pytest.mark.asyncio
-async def test_prompt_cli_handle_route_strips_argument(mock_router: MagicMock) -> None:
+def test_prompt_cli_handle_route_strips_argument(mock_router: MagicMock) -> None:
     """
     Given: command="load   file.sh  " (extra spaces)
     When: handle_route() is called
@@ -130,7 +130,7 @@ async def test_prompt_cli_handle_route_strips_argument(mock_router: MagicMock) -
 
 
 @pytest.mark.asyncio
-async def test_prompt_cli_handle_route_passes_session_and_router(mock_router: MagicMock) -> None:
+def test_prompt_cli_handle_route_passes_session_and_router(mock_router: MagicMock) -> None:
     """
     Given: Valid command
     When: handle_route() calls controller
@@ -144,7 +144,7 @@ async def test_prompt_cli_handle_route_passes_session_and_router(mock_router: Ma
 
 
 @pytest.mark.asyncio
-async def test_prompt_cli_run_loops_until_exit() -> None:
+def test_prompt_cli_run_loops_until_exit() -> None:
     """
     Given: PromptCLI.run() is started
     When: Multiple commands are entered
@@ -153,7 +153,7 @@ async def test_prompt_cli_run_loops_until_exit() -> None:
 
 
 @pytest.mark.asyncio
-async def test_prompt_cli_run_exits_on_exit_request() -> None:
+def test_prompt_cli_run_exits_on_exit_request() -> None:
     """
     Given: Controller raises ExitRequest
     When: run() is executing
@@ -162,7 +162,7 @@ async def test_prompt_cli_run_exits_on_exit_request() -> None:
 
 
 @pytest.mark.asyncio
-async def test_prompt_cli_run_exits_on_keyboard_interrupt() -> None:
+def test_prompt_cli_run_exits_on_keyboard_interrupt() -> None:
     """
     Given: User presses Ctrl+C (KeyboardInterrupt)
     When: run() is executing
@@ -171,7 +171,7 @@ async def test_prompt_cli_run_exits_on_keyboard_interrupt() -> None:
 
 
 @pytest.mark.asyncio
-async def test_prompt_cli_run_catches_declusor_exception(mock_console: MagicMock) -> None:
+def test_prompt_cli_run_catches_declusor_exception(mock_console: MagicMock) -> None:
     """
     Given: Controller raises DeclusorException (e.g., RouterError)
     When: run() is executing
@@ -180,7 +180,7 @@ async def test_prompt_cli_run_catches_declusor_exception(mock_console: MagicMock
 
 
 @pytest.mark.asyncio
-async def test_prompt_cli_run_displays_error_message(mock_console: MagicMock) -> None:
+def test_prompt_cli_run_displays_error_message(mock_console: MagicMock) -> None:
     """
     Given: DeclusorException with message "invalid route"
     When: Exception is caught in run()
@@ -194,7 +194,7 @@ async def test_prompt_cli_run_displays_error_message(mock_console: MagicMock) ->
 
 
 @pytest.mark.asyncio
-async def test_prompt_cli_handle_route_invalid_route(mock_router: MagicMock) -> None:
+def test_prompt_cli_handle_route_invalid_route(mock_router: MagicMock) -> None:
     """
     Given: command="unknown_command"
     When: handle_route() locates route
@@ -203,9 +203,41 @@ async def test_prompt_cli_handle_route_invalid_route(mock_router: MagicMock) -> 
 
 
 @pytest.mark.asyncio
-async def test_prompt_cli_handle_route_empty_command(mock_console: MagicMock) -> None:
+def test_prompt_cli_handle_route_empty_command(mock_console: MagicMock) -> None:
     """
     Given: Somehow empty command reaches handle_route
     When: Pattern matching occurs
     Then: Handles gracefully (should not happen in practice)
+    """
+
+
+# =============================================================================
+# Tests: PromptCLI.run - Exit behavior (Ctrl+C scenarios)
+# =============================================================================
+
+
+@pytest.mark.asyncio
+def test_prompt_cli_run_exits_on_keyboard_interrupt_at_prompt() -> None:
+    """
+    Given: PromptCLI.run() is executing
+    When: KeyboardInterrupt is raised during read_command() (Ctrl+C at prompt)
+    Then: Loop breaks and run() returns normally (exits program)
+    """
+
+
+@pytest.mark.asyncio
+def test_prompt_cli_run_continues_on_keyboard_interrupt_in_command() -> None:
+    """
+    Given: PromptCLI.run() is executing a command
+    When: KeyboardInterrupt is raised during handle_route() (Ctrl+C in command like shell)
+    Then: Loop continues to next prompt (does not exit program)
+    """
+
+
+@pytest.mark.asyncio
+def test_prompt_cli_read_command_propagates_keyboard_interrupt() -> None:
+    """
+    Given: User presses Ctrl+C while read_command() is waiting for input
+    When: console.read_stripped_line() raises KeyboardInterrupt
+    Then: KeyboardInterrupt is re-raised to caller
     """

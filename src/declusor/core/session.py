@@ -1,109 +1,124 @@
-import asyncio
-from typing import AsyncGenerator
+import socket
+from typing import Generator
 
 from declusor import config, interface, util
 
 
-class Session(interface.ISession):
-    """Manages a session over an asyncio connection, handling reading and writing of data."""
+class SocketSession(interface.ISession):
+    """Manages a session over a socket connection, handling reading and writing of data."""
 
-    _DEFAULT_SERVER_ACKNOWLEDGE = config.Settings.ACK_SERVER_VALUE
-    _DEFAULT_CLIENT_ACKNOWLEDGE = config.Settings.ACK_CLIENT_VALUE
-    _DEFAULT_BUFFER_SIZE = 4096
-    _DEFAULT_TIMEOUT = 0.75
+    __DEFAULT_SERVER_ACK = config.Settings.ACK_SERVER_VALUE
+    _DEFAULT_CLIENT_ACK = util.hash_client_acknowledge(config.Settings.ACK_CLIENT_VALUE)
+    _DEFAULT_BUFFER_SIZE = 2**8
+    _DEFAULT_TIMEOUT = 1.0
 
     def __init__(
         self,
-        reader: asyncio.StreamReader,
-        writer: asyncio.StreamWriter,
+        conn: socket.socket,
         /,
         *,
-        timeout: float = _DEFAULT_TIMEOUT,
+        client_ack: bytes = _DEFAULT_CLIENT_ACK,
+        timeout: float | None = _DEFAULT_TIMEOUT,
         bufsize: int = _DEFAULT_BUFFER_SIZE,
     ) -> None:
         """
         Initialize the Session.
 
         Args:
-            reader: The asyncio StreamReader.
-            writer: The asyncio StreamWriter.
+            socket: The socket connection.
             timeout: Socket timeout in seconds.
             bufsize: Buffer size for reading data in bytes.
         """
 
-        self.reader = reader
-        self.writer = writer
-
+        self._socket = conn
+        self._client_ack = client_ack
         self._timeout = timeout
         self._bufsize = bufsize
 
-    async def initialize(self) -> None:
+        self._socket.settimeout(self._timeout)
+
+    def initialize(self, library: bytes) -> None:
         """Perform initial handshake/setup."""
 
+        self.write(library)
+
         try:
-            await self.write(util.load_library())
+            initial_data = self._socket.recv(self._bufsize)
 
-            try:
-                initial_data = await asyncio.wait_for(self.reader.read(self._bufsize), timeout=self._timeout)
+            if initial_data != self._client_ack:
+                raise config.SessionError("invalid client ACK during session initialization.")
+        except TimeoutError as exc:
+            raise config.SessionError("timeout waiting for client ACK during session initialization.") from exc
 
-                if initial_data != self._DEFAULT_CLIENT_ACKNOWLEDGE:
-                    raise config.DeclusorWarning("the library import may have failed.")
-            except asyncio.TimeoutError:
-                pass
-        except Exception:
-            pass
+    @property
+    def timeout(self) -> float | None:
+        """Timeout for socket operations."""
 
-    def set_timeout(self, value: float, /) -> None:
+        return self._timeout
+
+    @timeout.setter
+    def timeout(self, value: float | None, /) -> None:
         """Set the timeout for socket operations."""
 
         self._timeout = value
+        self._socket.settimeout(self._timeout)
 
-    def read(self) -> AsyncGenerator[bytes, None]:
-        """Read data from the connection until the server ACK is received. Yields chunks of data as they arrive, excluding the ACK."""
+    def read(self) -> Generator[bytes, None, None]:
+        """Read data from the connection until the client ACK is received.
 
-        async def _read_generator() -> AsyncGenerator[bytes, None]:
-            buffer = bytearray()
-            ack_len = len(self._DEFAULT_CLIENT_ACKNOWLEDGE)
-
-            while True:
-                try:
-                    chunk = await asyncio.wait_for(self.reader.read(self._bufsize), timeout=self._timeout)
-
-                    if not chunk:
-                        raise ConnectionResetError("Connection closed by peer")
-
-                    buffer.extend(chunk)
-
-                    search_start = max(0, len(buffer) - len(chunk) - ack_len)
-                    ack_index = buffer.find(self._DEFAULT_CLIENT_ACKNOWLEDGE, search_start)
-
-                    if ack_index != -1:
-                        yield bytes(buffer[:ack_index])
-                        break
-
-                    if len(buffer) > ack_len:
-                        safe_len = len(buffer) - ack_len
-
-                        yield bytes(buffer[:safe_len])
-                        del buffer[:safe_len]
-
-                except asyncio.TimeoutError:
-                    continue
-
-        return _read_generator()
-
-    async def write(self, content: bytes, /) -> None:
+        Yields chunks of data as they arrive, excluding the ACK. Only keeps a small
+        buffer (size of ACK) to detect when transmission is complete.
         """
-        Write data to the connection followed by the client ACK.
+
+        ack, ack_len = self._client_ack, len(self._client_ack)
+        buffer = bytearray()
+
+        while True:
+            try:
+                chunk = self._socket.recv(self._bufsize)
+
+                if not chunk:
+                    raise ConnectionResetError("Connection closed by peer")
+
+                combined = buffer + chunk
+                ack_index = combined.find(ack)
+
+                if ack_index != -1:
+                    if ack_index > 0:
+                        yield bytes(combined[:ack_index])
+
+                    break
+
+                if len(combined) >= ack_len:
+                    yield_len = len(combined) - (ack_len - 1)
+
+                    yield bytes(combined[:yield_len])
+
+                    buffer = combined[yield_len:]
+                else:
+                    buffer = combined
+
+            except TimeoutError as exc:
+                raise config.SessionError("Timeout while reading from connection") from exc
+            except OSError as exc:
+                raise config.SessionError(f"Failed to read from connection: {exc}") from exc
+
+    def write(self, content: bytes, /) -> None:
+        """Write data to the connection followed by the client ACK.
 
         Args:
             content: The bytes to send.
         """
 
         try:
-            self.writer.write(content)
-            self.writer.write(self._DEFAULT_SERVER_ACKNOWLEDGE)
+            self._socket.send(content)
+            self._socket.send(self.__DEFAULT_SERVER_ACK)
+        except TimeoutError as exc:
+            raise config.SessionError("Timeout while writing to connection") from exc
+        except OSError as exc:
+            raise config.SessionError(f"Failed to write to connection: {exc}") from exc
 
-            await self.writer.drain()
-        except OSError as e:
-            raise ConnectionError(f"Failed to write to connection: {e}") from e
+    def close(self) -> None:
+        """Close the session socket."""
+
+        self._socket.close()

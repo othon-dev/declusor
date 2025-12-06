@@ -29,7 +29,7 @@ def mock_router() -> MagicMock:
 
 
 @pytest.mark.asyncio
-async def test_call_shell_accepts_empty_line(mock_session: AsyncMock, mock_router: MagicMock) -> None:
+def test_call_shell_accepts_empty_line(mock_session: AsyncMock, mock_router: MagicMock) -> None:
     """
     Given: call_shell with empty line ""
     When: Controller parses arguments
@@ -38,7 +38,7 @@ async def test_call_shell_accepts_empty_line(mock_session: AsyncMock, mock_route
 
 
 @pytest.mark.asyncio
-async def test_call_shell_rejects_extra_arguments(mock_session: AsyncMock, mock_router: MagicMock) -> None:
+def test_call_shell_rejects_extra_arguments(mock_session: AsyncMock, mock_router: MagicMock) -> None:
     """
     Given: call_shell with line="unexpected args"
     When: Controller parses arguments
@@ -47,7 +47,7 @@ async def test_call_shell_rejects_extra_arguments(mock_session: AsyncMock, mock_
 
 
 @pytest.mark.asyncio
-async def test_call_shell_uses_empty_definitions(mock_session: AsyncMock, mock_router: MagicMock) -> None:
+def test_call_shell_uses_empty_definitions(mock_session: AsyncMock, mock_router: MagicMock) -> None:
     """
     Given: call_shell function
     When: parse_command_arguments is called
@@ -61,7 +61,7 @@ async def test_call_shell_uses_empty_definitions(mock_session: AsyncMock, mock_r
 
 
 @pytest.mark.asyncio
-async def test_call_shell_creates_launch_shell(mock_session: AsyncMock, mock_router: MagicMock) -> None:
+def test_call_shell_creates_launch_shell(mock_session: AsyncMock, mock_router: MagicMock) -> None:
     """
     Given: call_shell with valid invocation
     When: Controller executes
@@ -70,7 +70,7 @@ async def test_call_shell_creates_launch_shell(mock_session: AsyncMock, mock_rou
 
 
 @pytest.mark.asyncio
-async def test_call_shell_executes_on_session(mock_session: AsyncMock, mock_router: MagicMock) -> None:
+def test_call_shell_executes_on_session(mock_session: AsyncMock, mock_router: MagicMock) -> None:
     """
     Given: call_shell is invoked
     When: Controller executes
@@ -79,7 +79,7 @@ async def test_call_shell_executes_on_session(mock_session: AsyncMock, mock_rout
 
 
 @pytest.mark.asyncio
-async def test_call_shell_awaits_shell_completion(mock_session: AsyncMock, mock_router: MagicMock) -> None:
+def test_call_shell_awaits_shell_completion(mock_session: AsyncMock, mock_router: MagicMock) -> None:
     """
     Given: call_shell is invoked
     When: Shell is running
@@ -93,7 +93,7 @@ async def test_call_shell_awaits_shell_completion(mock_session: AsyncMock, mock_
 
 
 @pytest.mark.asyncio
-async def test_call_shell_does_not_read_session_directly(mock_session: AsyncMock, mock_router: MagicMock) -> None:
+def test_call_shell_does_not_read_session_directly(mock_session: AsyncMock, mock_router: MagicMock) -> None:
     """
     Given: call_shell is invoked
     When: Controller executes
@@ -102,7 +102,7 @@ async def test_call_shell_does_not_read_session_directly(mock_session: AsyncMock
 
 
 @pytest.mark.asyncio
-async def test_call_shell_does_not_write_to_console(mock_session: AsyncMock, mock_router: MagicMock) -> None:
+def test_call_shell_does_not_write_to_console(mock_session: AsyncMock, mock_router: MagicMock) -> None:
     """
     Given: call_shell is invoked
     When: Controller executes

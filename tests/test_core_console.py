@@ -52,7 +52,7 @@ def test_console_init_history_file_none() -> None:
 
 
 @pytest.mark.asyncio
-async def test_console_read_line_returns_input() -> None:
+def test_console_read_line_returns_input() -> None:
     """
     Given: User types "hello" at prompt
     When: read_line() is called
@@ -61,7 +61,7 @@ async def test_console_read_line_returns_input() -> None:
 
 
 @pytest.mark.asyncio
-async def test_console_read_line_with_prompt() -> None:
+def test_console_read_line_with_prompt() -> None:
     """
     Given: read_line(prompt=">> ") is called
     When: Input is awaited
@@ -70,7 +70,7 @@ async def test_console_read_line_with_prompt() -> None:
 
 
 @pytest.mark.asyncio
-async def test_console_read_line_uses_thread_executor() -> None:
+def test_console_read_line_uses_thread_executor() -> None:
     """
     Given: read_line() is called
     When: Awaiting input
@@ -84,7 +84,7 @@ async def test_console_read_line_uses_thread_executor() -> None:
 
 
 @pytest.mark.asyncio
-async def test_console_read_stripped_line_strips_whitespace() -> None:
+def test_console_read_stripped_line_strips_whitespace() -> None:
     """
     Given: User enters "  hello  " (with spaces)
     When: read_stripped_line() is called
@@ -93,7 +93,7 @@ async def test_console_read_stripped_line_strips_whitespace() -> None:
 
 
 @pytest.mark.asyncio
-async def test_console_read_stripped_line_handles_empty_input() -> None:
+def test_console_read_stripped_line_handles_empty_input() -> None:
     """
     Given: User enters only whitespace or empty string
     When: read_stripped_line() is called

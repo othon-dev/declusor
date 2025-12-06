@@ -29,7 +29,7 @@ def mock_router() -> MagicMock:
 
 
 @pytest.mark.asyncio
-async def test_call_exit_raises_exit_request(mock_session: AsyncMock, mock_router: MagicMock) -> None:
+def test_call_exit_raises_exit_request(mock_session: AsyncMock, mock_router: MagicMock) -> None:
     """
     Given: call_exit is called
     When: Controller executes
@@ -38,7 +38,7 @@ async def test_call_exit_raises_exit_request(mock_session: AsyncMock, mock_route
 
 
 @pytest.mark.asyncio
-async def test_call_exit_ignores_line_argument(mock_session: AsyncMock, mock_router: MagicMock) -> None:
+def test_call_exit_ignores_line_argument(mock_session: AsyncMock, mock_router: MagicMock) -> None:
     """
     Given: call_exit is called with line="ignored args"
     When: Controller executes
@@ -47,7 +47,7 @@ async def test_call_exit_ignores_line_argument(mock_session: AsyncMock, mock_rou
 
 
 @pytest.mark.asyncio
-async def test_call_exit_does_not_interact_with_session(mock_session: AsyncMock, mock_router: MagicMock) -> None:
+def test_call_exit_does_not_interact_with_session(mock_session: AsyncMock, mock_router: MagicMock) -> None:
     """
     Given: call_exit is called
     When: Controller executes
@@ -56,7 +56,7 @@ async def test_call_exit_does_not_interact_with_session(mock_session: AsyncMock,
 
 
 @pytest.mark.asyncio
-async def test_call_exit_exit_request_is_declusor_exception() -> None:
+def test_call_exit_exit_request_is_declusor_exception() -> None:
     """
     Given: ExitRequest is raised
     When: Checking exception type

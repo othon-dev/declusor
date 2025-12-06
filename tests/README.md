@@ -40,7 +40,6 @@ Individual test functions use the Given/When/Then format in their docstrings:
 
 Tests are designed to be executed via pytest with the following considerations:
 
-- Asynchronous tests are marked with `@pytest.mark.asyncio`
 - Fixtures provide mocked dependencies for isolation
 - Tests should not depend on external resources or network access
 
