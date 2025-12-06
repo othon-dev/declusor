@@ -25,6 +25,12 @@ class Settings:
     ACK_SERVER_VALUE = b"\x00"
     """Acknowledgment byte sequence sent by the server."""
 
+    PROJECT_NAME = "declusor"
+    """Name of the project."""
+
+    PROJECT_DESCRIPTION = "a versatile tool for delivering Bash payloads to Linux systems."
+    """Short description of the project."""
+
 
 class BasePath:
     """Base paths for Declusor project directories."""
